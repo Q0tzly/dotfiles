@@ -1,0 +1,12 @@
+[tools]
+bat = "latest"
+eza = "latest"
+fastfetch = "latest"
+fd = "latest"
+go = "latest"
+helix = "latest"
+lima = "latest"
+rust = "latest"
+starship = "latest"
+yazi = "latest"
+zellij = "latest"

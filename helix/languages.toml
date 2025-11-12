@@ -1,0 +1,35 @@
+# Rust
+#[language-server.rust-analyzer.config.check]
+#command = "clippy"
+[[language]]
+name = "rust"
+
+# Toml
+[[language]]
+name = "toml"
+formatter = { command = "taplo", args = ["fmt", "-"] }
+
+# Yaml
+#[language-server.yaml-language-server.config.yaml]
+#format = { enable = true }
+#validation = true
+
+#[language-server.yaml-language-server.config.yaml.schemas]
+#"https://json.schemastore.org/github-workflow.json" = ".github/workflows/*.{yml,yaml}"
+#"https://raw.githubusercontent.com/ansible-community/schemas/main/f/ansible-tasks.json" = "roles/{tasks,handlers}/*.{yml,yaml}"
+
+#[[language]]
+#name = "v"
+
+#[language-server.v]
+#command = "/Users/yuto/.config/v-analyzer/bin/v-analyzer"
+
+#[[language]]
+#name = "wat"
+#scope = "source.wat"
+#file-types = ["wat"]
+
+#[language.config]
+#tab-width = 2
+#indent-width = 2
+#expand-tabs = true
