@@ -1,0 +1,7 @@
+[keyboard]
+bindings = [
+  {"h", "Vi", "Left",},
+  {"j", "Vi", "Down",},
+  {"k", "Vi", "Up",},
+  {"l", "Vi", "Right",},
+]
