@@ -1,0 +1,16 @@
+[colors]
+#background = "#2F333F"
+background = "#272727"
+#foreground = "#404040"
+foreground = "#dbdbdb"
+
+blue = '#769EB3'
+cyan = '#83B3AA'
+green = '#95A863'
+megenta = '#A2779D'
+red = '#9F4946'
+white = '#E6E6E6'
+yellow = '#ECC180'
+black = '#000000'
+
+cursor = "#BCB4A4"

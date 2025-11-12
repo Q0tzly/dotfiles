@@ -1,0 +1,15 @@
+[colors]
+background = '#E8E8E8'
+foreground = "#141414"
+
+
+black = '#FFFFFF'
+# blue = '#769EB3'
+# cyan = '#83B3AA'
+# green = '#95A863'
+# megenta = '#A2779D'
+# red = '#9F4946'
+white = '#141414'
+# yellow = '#ECC180'
+
+# cursor = "#BCB4A4"

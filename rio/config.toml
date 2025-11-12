@@ -1,0 +1,28 @@
+[adaptive-theme]
+light = "$HOME/.config/rio/themes/light.toml"
+dark = "$HOME/.config/rio/themes/dark.toml"
+
+[fonts]
+size = 16
+
+fonts.family = "JetBrainsMono Nerd Font Mono"
+
+[startup]
+confirm-before-quit = false
+draw-bold-text-with-light-colors = true
+
+[editor]
+program = "nvim"
+args = []
+
+[navigation]
+mode = "Bookmark"
+
+[renderer]
+performance = "High"
+backend = "Automatic"
+disable-unfocused-render = false
+disable-occluded-render = true
+
+[window]
+macos-use-shadow = true
