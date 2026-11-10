@@ -1,0 +1,4 @@
+[env_var.PSTTY_SESSION]
+variable = "PSTTY_SESSION"
+format = "[pstty:$env_value]($style) "
+style = "bold yellow"

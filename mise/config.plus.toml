@@ -1,0 +1,53 @@
+# Loaded on top of config.toml when MISE_ENV=plus.
+[tools]
+# Languages / runtimes
+rust = "latest"
+go = "latest"
+node = "latest"
+bun = "latest"
+python = "latest"
+uv = "latest"
+java = "latest"
+dotnet = "latest"
+erlang = "latest"
+elixir = "1.20.5-otp-29"
+cmake = "latest"
+tinygo = "0.42.0"
+wasm-tools = "latest"
+"github:WebAssembly/binaryen" = "latest"
+"conda:emacs" = "31.1"
+
+# Rust tooling
+sccache = "latest"
+cargo-binstall = "latest"
+"cargo:auto-oss" = "latest"
+"cargo:cargo-fuzz" = "latest"
+"cargo:flp" = "latest"
+"cargo:furl-cli" = "latest"
+"cargo:onefetch" = "latest"
+"cargo:repom" = "latest"
+"cargo:ripget" = "latest"
+"cargo:veryl" = "latest"
+
+# AI / agents
+claude = "latest"
+codex = "latest"
+ollama = "latest"
+"github:rtk-ai/rtk" = "latest"
+"npm:agent-desktop" = "latest"
+
+# Cloud / infra / web
+wrangler = { version = "latest", allow_builds = ["esbuild", "sharp", "workerd"] }
+"npm:cf" = "1.0.0-beta.12"
+cloudflared = "latest"
+hugo = "latest"
+rclone = "latest"
+lima = "latest"
+
+# Media / docs
+ffmpeg = "latest"
+marp-cli = "latest"
+
+# Misc
+"go:github.com/boyter/scc/v3" = "latest"
+"go:github.com/Q0tzly/pstty/cmd/pst" = "latest"
