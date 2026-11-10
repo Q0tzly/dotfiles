@@ -1,0 +1,5 @@
+[tools]
+# colima/lima run a Linux VM, so they are macOS only.
+colima = { version = "latest", os = ["macos"] }
+lima = { version = "latest", os = ["macos"] }
+docker-cli = "latest"

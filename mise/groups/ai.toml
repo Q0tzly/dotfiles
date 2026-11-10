@@ -1,0 +1,4 @@
+[tools]
+claude = "latest"
+codex = "latest"
+"github:rtk-ai/rtk" = "latest"

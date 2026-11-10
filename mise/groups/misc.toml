@@ -1,0 +1,3 @@
+[tools]
+"go:github.com/boyter/scc/v3" = "latest"
+"go:github.com/Q0tzly/pstty/cmd/pst" = "latest"

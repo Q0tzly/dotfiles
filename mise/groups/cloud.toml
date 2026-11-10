@@ -1,0 +1,6 @@
+[tools]
+wrangler = { version = "latest", allow_builds = ["esbuild", "sharp", "workerd"] }
+"npm:cf" = "1.0.0-beta.12"
+cloudflared = "latest"
+hugo = "latest"
+rclone = "latest"
