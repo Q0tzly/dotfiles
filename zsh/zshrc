@@ -35,9 +35,6 @@ alias la='eza -a --git'
 alias lt='eza -T --git -I "target|__pycache__|node_modules"'
 alias ll='eza -l --total-size --git'
 
-# sweep [path] [days]: remove Rust build artifacts untouched for N days (default: ~/dev, 30).
-sweep() { cargo sweep --recursive --time "${2:-30}" "${1:-$HOME/dev}"; }
-
 # Authenticated GitHub requests avoid API rate limits when mise resolves "latest".
 if token="$(gh auth token 2>/dev/null)" && [[ -n $token ]]; then
   export MISE_GITHUB_TOKEN="$token"

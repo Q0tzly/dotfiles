@@ -55,6 +55,13 @@ link mise/config.toml "$HOME/.config/mise/config.toml"
 link mise/config.plus.toml "$HOME/.config/mise/config.plus.toml"
 link cargo/config.toml "$HOME/.cargo/config.toml"
 
+# Untracked, machine-specific secrets go here; keep it private.
+if [[ ! -e "$HOME/.zshrc.local" ]]; then
+  (umask 077; : > "$HOME/.zshrc.local")
+  log "Created $HOME/.zshrc.local"
+fi
+chmod 600 "$HOME/.zshrc.local"
+
 if [[ $LINK_ONLY -eq 1 ]]; then
   log "Done (links only)"
   exit 0

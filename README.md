@@ -50,7 +50,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 ## Rust の target/ が重いとき
 
 - `cargo/config.toml` で dev ビルドのデバッグ情報を行番号のみに減らしている（サイズの大半を占めるため）。
-- 古いビルド成果物は `sweep [path] [日数]` で消せる（path 省略で `~/dev`、日数省略で 30。plus の `cargo-sweep` を使う）。
+- 古いビルド成果物は `cargo sweep --recursive --time 30 <path>` で消せる（path 省略で今のディレクトリ。plus の `cargo-sweep`）。例: `cargo sweep -r -t 30 .` / `cargo sweep -r -t 30 ~/dev`
 - sccache は外した。キャッシュが別に数 GB 増えるうえ、incremental ビルドと相性が悪く、target/ のサイズも減らないため。
 
 ## 自動アップデート (launchd)
