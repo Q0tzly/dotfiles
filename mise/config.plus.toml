@@ -42,6 +42,7 @@ wrangler = { version = "latest", allow_builds = ["esbuild", "sharp", "workerd"] 
 cloudflared = "latest"
 hugo = "latest"
 rclone = "latest"
+colima = "latest"
 lima = "latest"
 
 # Media / docs

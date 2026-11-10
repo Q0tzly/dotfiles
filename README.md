@@ -21,7 +21,7 @@ macOS (zsh / Ghostty / helix / starship / mise) の設定。
 
 ## 自動アップデート (launchd)
 
-`launchd/` の plist を有効化すると毎日 12:00 に `mise upgrade`（plus 込み）が走る。
+`launchd/` の plist を有効化すると毎日 12:00 に `mise upgrade`（plus 込み。prune はしない）が走る。
 
 ```sh
 ln -sf "$PWD/launchd/dev.q0tzly.mise-upgrade.plist" ~/Library/LaunchAgents/

@@ -11,4 +11,3 @@ fi
 
 echo "=== $(date '+%F %T') mise upgrade ==="
 mise upgrade --yes
-mise prune --yes
