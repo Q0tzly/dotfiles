@@ -31,6 +31,8 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 | `helix/` | `~/.config/helix/` |
 | `starship/starship.toml` | `~/.config/starship.toml` |
 | `cargo/config.toml` | `~/.cargo/config.toml` |
+| `claude/CLAUDE.md` `claude/{agents,commands,hooks,output-styles}/` | `~/.claude/` 配下 |
+| `codex/AGENTS.md` | `~/.codex/AGENTS.md` |
 | `mise/config.toml` | `~/.config/mise/config.toml` |
 | `mise/groups/` | `mise-group enable` で `~/.config/mise/conf.d/` にリンク |
 | `scripts/mise-group` | `~/.local/bin/mise-group` |
@@ -48,7 +50,14 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 
 `~/.gitconfig` は触らない。
 
-## mise
+## コーディングエージェント
+
+Claude Code と Codex のグローバル指示・カスタムコマンド・サブエージェントを置く（旧 for-AI リポジトリ）。
+
+- `~/.claude/settings.json` と `~/.claude/skills/` はリンクしない。設定はマシンの状態を含み、skills にはプラグインが自動で書き込むため
+- `RTK.md`（`@RTK.md` で読み込む）は rtk が各マシンで生成するのでリポジトリに入れない
+- 実装を Gemini Flash に委任する仕組みは別リポジトリの [subcon](https://github.com/Q0tzly/subcon)。指示からは `subcon guide` を参照する
+
 
 - `mise/config.toml`: core。常に入る最小構成
 - `mise/groups/<名前>.toml`: ジャンルごとの追加ツール。`mise-group` で入れたり消したりする
