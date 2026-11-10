@@ -16,7 +16,6 @@ cargo-binstall = "latest"
 "cargo:flp" = "latest"
 "cargo:furl-cli" = "latest"
 "cargo:onefetch" = "latest"
-"cargo:repom" = "latest"
 "cargo:ripget" = "latest"
 "cargo:veryl" = "latest"
 
