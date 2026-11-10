@@ -1,6 +1,6 @@
 # グローバル指示
 
-Claude Code・Codex・Muse が全セッションで読み込む個人指示（dotfiles の `ai/AGENTS.md`。`~/.claude/CLAUDE.md` と `~/.codex/AGENTS.md` はここへのリンクで、Muse はこの 2 つを取り込む）。
+Claude Code・Codex・Muse が全セッションで読み込む個人指示（dotfiles の `ai/AGENTS.md`。`~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`、`~/AGENTS.md`（Muse の運用ファイル）はここへのリンク）。
 プロジェクト固有のことは各リポジトリの `CLAUDE.md` / `AGENTS.md` に書く。
 
 ## 言語・トーン
@@ -24,6 +24,7 @@ Claude Code・Codex・Muse が全セッションで読み込む個人指示（do
 
 ## Git
 
+- リポジトリに記録するのは決定事項だけ。未決定の案・検討メモ・調査資料はローカルに留める。
 - コミットは 1 つの変更がまとまった時点でその場で切る（あとでまとめない）。
 - メッセージは英語。件名は `add:` / `update:` / `fix:` / `docs:` + 大文字で始まる命令形（既存の log に倣う）。本文には何をしたかを箇条書きで列挙し、必要なら理由を添える。PR も英語で、変更点を列挙する。
 - 自分が書いた変更には `Co-Authored-By: <モデル名とバージョン> <アドレス>` を付ける。subcon で委任した変更は `subcon guide` の規則に従う（実装者が Co-Authored-By、自分は Reviewed-By。自分も手を入れたら両方）。

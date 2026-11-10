@@ -35,7 +35,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 | `helix/` | `~/.config/helix/` |
 | `starship/starship.toml` | `~/.config/starship.toml` |
 | `cargo/config.toml` | `~/.cargo/config.toml` |
-| `ai/AGENTS.md` | `~/.claude/CLAUDE.md` と `~/.codex/AGENTS.md` |
+| `ai/AGENTS.md` | `~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`、`~/AGENTS.md`（Muse） |
 | `mise/config.toml` | `~/.config/mise/config.toml` |
 | `mise/groups/` | `mise-group enable` で `~/.config/mise/conf.d/` にリンク |
 | `scripts/mise-group` | `~/.local/bin/mise-group` |
@@ -62,7 +62,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 
 ## コーディングエージェント
 
-Claude Code と Codex のグローバル指示は `ai/AGENTS.md` の 1 ファイルで共通（旧 for-AI リポジトリ）。Muse は `~/.claude/CLAUDE.md` と `~/.codex/AGENTS.md` を個人ルールとして自分で取り込む（`/settings` の foreign personal rules。既定で有効）ので、追加のリンクは要らない。
+Claude Code・Codex・Muse のグローバル指示は `ai/AGENTS.md` の 1 ファイルで共通（旧 for-AI リポジトリ）。各ツールの読む場所（`~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`、Muse の `~/AGENTS.md`）へリンクする。
 
 - Codex は `@パス` の読み込みに対応していないので、このファイルは他を読み込まずに完結させる
 - `~/.claude/settings.json` と `~/.claude/skills/` はリンクしない。設定はマシンの状態を含み、skills にはプラグインが自動で書き込むため

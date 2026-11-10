@@ -79,9 +79,8 @@ link cargo/config.toml "$HOME/.cargo/config.toml"
 # @imports, so the file must be self-contained.
 link ai/AGENTS.md "$HOME/.claude/CLAUDE.md"
 link ai/AGENTS.md "$HOME/.codex/AGENTS.md"
-
-# Muse reads ~/.claude/CLAUDE.md and ~/.codex/AGENTS.md as personal rules by itself
-# (settings.context.foreign_personal_rules), so the links above cover it too.
+# Muse reads ~/AGENTS.md as its operating manual, so the same file goes there too.
+link ai/AGENTS.md "$HOME/AGENTS.md"
 
 if [[ $WITH_SUBCON -eq 1 ]]; then
   if [[ -d "$SUBCON/.git" ]]; then
