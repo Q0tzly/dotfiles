@@ -1,0 +1,13 @@
+[ghq]
+	root = dev
+[user]
+	name = Q0tzly
+	email = git@q0tzly.dev
+[core]
+	editor = hx
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !gh auth git-credential

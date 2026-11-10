@@ -1,12 +1,13 @@
+# Minimal set: everything the shell config and daily editing rely on.
+# Extra tools live in config.plus.toml (enable with MISE_ENV=plus).
 [tools]
 bat = "latest"
 eza = "latest"
-fastfetch = "latest"
 fd = "latest"
-go = "latest"
+fzf = "latest"
+gh = "latest"
+ghq = "latest"
 helix = "latest"
-lima = "latest"
-rust = "latest"
+ripgrep = "latest"
 starship = "latest"
-yazi = "latest"
-zellij = "latest"
+zoxide = "latest"

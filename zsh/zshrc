@@ -1,0 +1,54 @@
+autoload -Uz compinit && compinit
+
+eval "$(/Users/q0tzly/.local/bin/mise activate zsh)"
+eval "$(starship init zsh)"
+
+# Inside a pstty session, suppress zsh's PROMPT_SP "%" end-of-line mark
+# for the whole shell's lifetime. Toggling it per-prompt via precmd/
+# preexec doesn't work: zsh decides whether to print the mark before
+# precmd hooks run, so an unsetopt there is always one step too late.
+[[ -n "$PSTTY_SESSION" ]] && unsetopt PROMPT_SP
+eval "$(zoxide init zsh)"
+eval "$(rem init zsh)"
+
+alias zz='z ..'
+
+alias l='eza --git'
+alias la='eza -a --git'
+alias lt='eza -T --git -I "target|__pycache__|node_modules"'
+alias la='eza -a --git'
+alias ll='eza -l --total-size --git'
+
+alias fl="furl"
+
+export RUSTC_WRAPPER=sccache
+
+export PATH="/Users/q0tzly/.local/bin:$PATH"
+export PATH="/Users/q0tzly/.antigravity-ide/antigravity-ide/bin:$PATH"
+
+# export GITHUB_TOKEN="$(gh auth token)"
+
+# MISE_GITHUB_TOKEN
+if token="$(gh auth token 2>/dev/null)" && [[ -n $token ]]; then
+  export MISE_GITHUB_TOKEN="$token"
+fi
+
+# export ANTHROPIC_BASE_URL=http://localhost:8000
+# export ANTHROPIC_API_KEY=not-needed
+
+# Added by Devin
+export PATH="/Users/q0tzly/.codeium/windsurf/bin:$PATH"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/q0tzly/.lmstudio/bin"
+# End of LM Studio CLI section
+
+
+. "$HOME/.local/bin/env"
+
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<
+
