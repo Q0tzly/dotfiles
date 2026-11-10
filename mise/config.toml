@@ -10,6 +10,4 @@ helix = "latest"
 ripgrep = "latest"
 starship = "latest"
 zoxide = "latest"
-# flp is built from source with cargo, so core needs rust.
-rust = "latest"
-"cargo:flp" = "latest"
+"github:Q0tzly/flp" = "latest"

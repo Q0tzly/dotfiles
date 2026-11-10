@@ -18,7 +18,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 - 既存ファイルは `*.bak.<日時>` に退避してから symlink する
 - `--link-only`: symlink だけ張り、mise は入れない
 - Ghostty 本体は入れない
-- 前提: `curl` と `git`（macOS は `xcode-select --install`）、`zsh`。Linux で `cargo:` 系（core の `flp` を含む）を入れるなら C コンパイラ（例: `build-essential`）も要る
+- 前提: `curl` と `git`（macOS は `xcode-select --install`）、`zsh`。Linux で `cargo:` 系（`rust-tools` や `hw` グループ）を入れるなら C コンパイラ（例: `build-essential`）も要る
 - Linux は Ubuntu 24.04 (aarch64) のコンテナで `install.sh` と `scripts/mise-upgrade.sh` を確認済み。systemd の timer は未確認
 
 ## 構成
@@ -50,7 +50,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 
 ## mise
 
-- `mise/config.toml`: core。常に入る最小構成（`flp` のために `rust` を含む）
+- `mise/config.toml`: core。常に入る最小構成
 - `mise/groups/<名前>.toml`: ジャンルごとの追加ツール。`mise-group` で入れたり消したりする
 
 ```sh

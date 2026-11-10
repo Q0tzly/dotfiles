@@ -2,6 +2,7 @@
 # Docker image (ghcr.io/librelane/librelane, needs colima/docker), sky130 PDK tarballs.
 # These entries replace manual installs under ~/.local/opt; the github: ones are untested.
 [tools]
+rust = "latest"
 "cargo:veryl" = "latest"
 just = "latest"
 "github:zachjs/sv2v" = "latest"

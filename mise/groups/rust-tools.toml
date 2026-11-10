@@ -1,5 +1,8 @@
 [tools]
+# cargo: tools are built with cargo, so the group carries rust itself.
+rust = "latest"
 cargo-binstall = "latest"
+"cargo:cargo-fuzz" = "latest"
 "cargo:cargo-sweep" = "latest"
 "cargo:furl-cli" = "latest"
 "cargo:onefetch" = "latest"

@@ -1,4 +1,5 @@
 [tools]
+rust = "latest"
 go = "latest"
 node = "latest"
 bun = "latest"
