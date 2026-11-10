@@ -62,7 +62,7 @@ mise-group disable lang          # 無効化して、そのグループのツー
 - 有効なグループは `~/.config/mise/conf.d/<名前>.toml`（グループ定義への symlink）の有無で決まる。マシンごとに組み合わせを変えられる。
 - `disable` は、他の有効な設定にも載っているツールは消さない。`mise prune` は使わない。
 - グループ: `lang` `rust-tools` `ai` `cloud` `container`（colima/lima は mac 限定） `hw` `wasm` `media` `misc`
-- `hw` は GrusArch 向け。mise で入らない KLayout.app、LibreLane の Docker イメージ、sky130 は対象外。oss-cad-suite・sv2v・xPack の RISC-V GCC は `github:` で入れる定義だが未検証。`pipx:librelane` は Docker イメージのタグと揃えて固定している。
+- `hw` は GrusArch 向け。動作確認済みの版に固定してあり、自動アップデートでは変わらない（上げるときは手で）。mise で再現できない・大きすぎるもの（oss-cad-suite、xPack の RISC-V GCC、LibreLane、fusesoc の venv、sky130、KLayout.app）は `~/.local/opt` などに手動で入れたままで、版は `hw.toml` の冒頭に書いてある。
 
 ## Rust の target/ が重いとき
 
