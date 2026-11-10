@@ -1,5 +1,5 @@
 #!/bin/bash
-# Bootstrap dotfiles on a fresh Mac (needs network):
+# Bootstrap dotfiles on a fresh macOS or Linux machine (needs network):
 #   curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | bash
 #   curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | bash -s -- --plus
 # Flags: --plus (also install config.plus.toml tools), --link-only (skip mise install)
@@ -7,6 +7,7 @@ set -euo pipefail
 
 REPO_URL="https://github.com/Q0tzly/dotfiles.git"
 DOTFILES="${DOTFILES:-$HOME/dev/github.com/q0tzly/dotfiles}"
+OS="${DOTFILES_OS:-$(uname -s)}"
 PLUS=0
 LINK_ONLY=0
 for arg in "$@"; do
@@ -19,11 +20,17 @@ done
 
 log() { printf '==> %s\n' "$*"; }
 
+case "$OS" in
+  Darwin|Linux) ;;
+  *) echo "unsupported OS: $OS" >&2; exit 1 ;;
+esac
+command -v curl >/dev/null || { echo "curl not found" >&2; exit 1; }
+
 if [[ -d "$DOTFILES/.git" ]]; then
   log "Updating $DOTFILES"
   git -C "$DOTFILES" pull --ff-only || log "pull skipped (no upstream or local changes)"
 else
-  command -v git >/dev/null || { echo "git not found. Run: xcode-select --install" >&2; exit 1; }
+  command -v git >/dev/null || { echo "git not found (macOS: xcode-select --install)" >&2; exit 1; }
   log "Cloning into $DOTFILES"
   git clone "$REPO_URL" "$DOTFILES"
 fi
@@ -47,7 +54,11 @@ link() {
 link zsh/zshrc "$HOME/.zshrc"
 # XDG path on purpose: leaves ~/.gitconfig free for machine-specific settings.
 link git/config "$HOME/.config/git/config"
-link ghostty/config.ghostty "$HOME/Library/Application Support/com.mitchellh.ghostty/config.ghostty"
+case "$OS" in
+  Darwin) link ghostty/config.ghostty "$HOME/Library/Application Support/com.mitchellh.ghostty/config.ghostty" ;;
+  Linux) link ghostty/config.ghostty "$HOME/.config/ghostty/config.ghostty" ;;
+  *) echo "unsupported OS: $OS" >&2; exit 1 ;;
+esac
 link helix/config.toml "$HOME/.config/helix/config.toml"
 link helix/languages.toml "$HOME/.config/helix/languages.toml"
 link starship/starship.toml "$HOME/.config/starship.toml"
@@ -80,4 +91,5 @@ else
   mise install --yes
 fi
 
+command -v zsh >/dev/null || log "zsh not found: install it with your package manager (the shell config is for zsh)"
 log "Done. Open a new shell. Ghostty itself is not installed by this script."

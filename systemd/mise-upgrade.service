@@ -1,0 +1,6 @@
+[Unit]
+Description=Upgrade mise-managed tools
+
+[Service]
+Type=oneshot
+ExecStart=%h/dev/github.com/q0tzly/dotfiles/scripts/mise-upgrade.sh
