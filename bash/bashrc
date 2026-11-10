@@ -1,0 +1,18 @@
+# Loader only. The shared base lives in shell/base.sh, human extras in
+# shell/human.sh, so bash and zsh stay in sync.
+# Profile: DOTFILES_PROFILE=ai skips decoration and convenience aliases
+# for agent sessions. Default is human.
+
+DOTFILES="${DOTFILES:-$HOME/dev/github.com/q0tzly/dotfiles}"
+
+. "$DOTFILES/shell/base.sh"
+
+if [ "${DOTFILES_PROFILE:-human}" = "human" ]; then
+  command -v starship >/dev/null && eval "$(starship init bash)"
+  command -v zoxide >/dev/null && eval "$(zoxide init bash)"
+  . "$DOTFILES/shell/human.sh"
+  alias zz='z ..'
+fi
+
+# Machine-specific settings and secrets (not tracked).
+[ -f "$HOME/.bashrc.local" ] && . "$HOME/.bashrc.local"

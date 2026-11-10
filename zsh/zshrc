@@ -1,43 +1,26 @@
-# Installers (Devin, LM Studio, grok, ...) append their own PATH lines to this file.
-# Review them with `git diff` and fold them into the block below.
+# Loader only. The shared base lives in shell/base.sh, human extras in
+# shell/human.sh, so zsh and bash stay in sync.
+# Profile: DOTFILES_PROFILE=ai skips decoration and convenience aliases
+# for agent sessions. Default is human.
+# Installers (Devin, LM Studio, grok, ...) append their own PATH lines to
+# this file. Review them with `git diff` and fold them into shell/base.sh.
 
-# PATH in one place: deduplicated, existing directories only.
-typeset -U path fpath
-path=(
-  $HOME/.local/bin
-  $HOME/.antigravity-ide/antigravity-ide/bin
-  $HOME/.codeium/windsurf/bin
-  $HOME/.grok/bin
-  $HOME/.lmstudio/bin
-  $path
-)
-path=($^path(N-/))
-fpath=($HOME/.grok/completions/zsh(N-/) $fpath)
+DOTFILES="${DOTFILES:-$HOME/dev/github.com/q0tzly/dotfiles}"
 
-autoload -Uz compinit && compinit
+. "$DOTFILES/shell/base.sh"
 
-[[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
-
-eval "$(mise activate zsh)"
-eval "$(starship init zsh)"
-eval "$(zoxide init zsh)"
-
-# Inside a pstty session, suppress zsh's PROMPT_SP "%" end-of-line mark
-# for the whole shell's lifetime. Toggling it per-prompt via precmd/
-# preexec doesn't work: zsh decides whether to print the mark before
-# precmd hooks run, so an unsetopt there is always one step too late.
-[[ -n "$PSTTY_SESSION" ]] && unsetopt PROMPT_SP
-
-alias zz='z ..'
-alias fl='furl'
-alias l='eza --git'
-alias la='eza -a --git'
-alias lt='eza -T --git -I "target|__pycache__|node_modules"'
-alias ll='eza -l --total-size --git'
-
-# Authenticated GitHub requests avoid API rate limits when mise resolves "latest".
-if token="$(gh auth token 2>/dev/null)" && [[ -n $token ]]; then
-  export MISE_GITHUB_TOKEN="$token"
+if [[ "${DOTFILES_PROFILE:-human}" == "human" ]]; then
+  fpath=($HOME/.grok/completions/zsh(N-/) $fpath)
+  autoload -Uz compinit && compinit
+  command -v starship >/dev/null && eval "$(starship init zsh)"
+  command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
+  # Inside a pstty session, suppress zsh's PROMPT_SP "%" end-of-line mark
+  # for the whole shell's lifetime. Toggling it per-prompt via precmd/
+  # preexec doesn't work: zsh decides whether to print the mark before
+  # precmd hooks run, so an unsetopt there is always one step too late.
+  [[ -n "$PSTTY_SESSION" ]] && unsetopt PROMPT_SP
+  . "$DOTFILES/shell/human.sh"
+  alias zz='z ..'
 fi
 
 # Machine-specific settings and secrets (not tracked).

@@ -61,6 +61,7 @@ link() {
 }
 
 link zsh/zshrc "$HOME/.zshrc"
+link bash/bashrc "$HOME/.bashrc"
 # XDG path on purpose: leaves ~/.gitconfig free for machine-specific settings.
 link git/config "$HOME/.config/git/config"
 case "$OS" in
@@ -93,12 +94,14 @@ if [[ $WITH_SUBCON -eq 1 ]]; then
   "$SUBCON/install.sh"
 fi
 
-# Untracked, machine-specific secrets go here; keep it private.
-if [[ ! -e "$HOME/.zshrc.local" ]]; then
-  (umask 077; : > "$HOME/.zshrc.local")
-  log "Created $HOME/.zshrc.local"
-fi
-chmod 600 "$HOME/.zshrc.local"
+# Untracked, machine-specific secrets go here; keep them private.
+for local_rc in "$HOME/.zshrc.local" "$HOME/.bashrc.local"; do
+  if [[ ! -e "$local_rc" ]]; then
+    (umask 077; : > "$local_rc")
+    log "Created $local_rc"
+  fi
+  chmod 600 "$local_rc"
+done
 
 if [[ $ALL_GROUPS -eq 1 ]]; then
   "$DOTFILES/scripts/mise-group" enable --no-install $("$DOTFILES/scripts/mise-group" names)
