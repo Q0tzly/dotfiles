@@ -17,6 +17,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 - clone 先: `~/dev/github.com/q0tzly/dotfiles`（`DOTFILES=` で変更可）
 - 既存ファイルは `*.bak.<日時>` に退避してから symlink する
 - `--link-only`: symlink だけ張り、mise は入れない
+- `--subcon`: [subcon](https://github.com/Q0tzly/subcon) も clone（`SUBCON=` で変更可）して、その `install.sh` を実行する。`subcon` を PATH に、Muse が入っていればそのスキルも入れる
 - Ghostty 本体は入れない
 - 前提: `curl` と `git`（macOS は `xcode-select --install`）、`zsh`。Linux で `cargo:` 系（`rust-tools` や `hw` グループ）を入れるなら C コンパイラ（例: `build-essential`）も要る
 - Linux は Ubuntu 24.04 (aarch64) のコンテナで `install.sh` と `scripts/mise-upgrade.sh` を確認済み。systemd の timer は未確認
@@ -51,7 +52,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 
 ## コーディングエージェント
 
-Claude Code と Codex のグローバル指示は `ai/AGENTS.md` の 1 ファイルで共通（旧 for-AI リポジトリ）。
+Claude Code と Codex のグローバル指示は `ai/AGENTS.md` の 1 ファイルで共通（旧 for-AI リポジトリ）。Muse は `~/.claude/CLAUDE.md` と `~/.codex/AGENTS.md` を個人ルールとして自分で取り込む（`/settings` の foreign personal rules。既定で有効）ので、追加のリンクは要らない。
 
 - Codex は `@パス` の読み込みに対応していないので、このファイルは他を読み込まずに完結させる
 - `~/.claude/settings.json` と `~/.claude/skills/` はリンクしない。設定はマシンの状態を含み、skills にはプラグインが自動で書き込むため

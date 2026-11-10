@@ -1,6 +1,6 @@
 # グローバル指示
 
-Claude Code と Codex が全セッションで読み込む個人指示（dotfiles の `ai/AGENTS.md`。`~/.claude/CLAUDE.md` と `~/.codex/AGENTS.md` はここへのリンク）。
+Claude Code・Codex・Muse が全セッションで読み込む個人指示（dotfiles の `ai/AGENTS.md`。`~/.claude/CLAUDE.md` と `~/.codex/AGENTS.md` はここへのリンクで、Muse はこの 2 つを取り込む）。
 プロジェクト固有のことは各リポジトリの `CLAUDE.md` / `AGENTS.md` に書く。
 
 ## 言語・トーン

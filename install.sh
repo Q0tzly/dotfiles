@@ -4,11 +4,15 @@
 #   curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | bash -s -- --groups lang,ai
 # Flags: --groups a,b (enable mise tool groups, see mise/groups/), --all (every group),
 #        --link-only (skip mise install)
+#        --subcon (also clone and install subcon, which links itself and its Muse skill)
 set -euo pipefail
 
 REPO_URL="https://github.com/Q0tzly/dotfiles.git"
 DOTFILES="${DOTFILES:-$HOME/dev/github.com/q0tzly/dotfiles}"
 OS="${DOTFILES_OS:-$(uname -s)}"
+SUBCON_REPO_URL="https://github.com/Q0tzly/subcon.git"
+SUBCON="${SUBCON:-$HOME/dev/github.com/q0tzly/subcon}"
+WITH_SUBCON=0
 GROUPS_TO_ENABLE=""
 ALL_GROUPS=0
 LINK_ONLY=0
@@ -17,6 +21,7 @@ while [[ $# -gt 0 ]]; do
     --groups) GROUPS_TO_ENABLE="${2:?--groups needs a comma-separated list}"; shift ;;
     --all) ALL_GROUPS=1 ;;
     --link-only) LINK_ONLY=1 ;;
+    --subcon) WITH_SUBCON=1 ;;
     *) echo "unknown flag: $1" >&2; exit 1 ;;
   esac
   shift
@@ -73,6 +78,20 @@ link cargo/config.toml "$HOME/.cargo/config.toml"
 # @imports, so the file must be self-contained.
 link ai/AGENTS.md "$HOME/.claude/CLAUDE.md"
 link ai/AGENTS.md "$HOME/.codex/AGENTS.md"
+
+# Muse reads ~/.claude/CLAUDE.md and ~/.codex/AGENTS.md as personal rules by itself
+# (settings.context.foreign_personal_rules), so the links above cover it too.
+
+if [[ $WITH_SUBCON -eq 1 ]]; then
+  if [[ -d "$SUBCON/.git" ]]; then
+    log "Updating $SUBCON"
+    git -C "$SUBCON" pull --ff-only || log "pull skipped (no upstream or local changes)"
+  else
+    log "Cloning subcon into $SUBCON"
+    git clone "$SUBCON_REPO_URL" "$SUBCON"
+  fi
+  "$SUBCON/install.sh"
+fi
 
 # Untracked, machine-specific secrets go here; keep it private.
 if [[ ! -e "$HOME/.zshrc.local" ]]; then
