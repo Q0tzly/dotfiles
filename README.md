@@ -26,7 +26,10 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 
 | path | リンク先 |
 | --- | --- |
-| `zsh/zshrc` | `~/.zshrc` |
+| `zsh/zshrc` | `~/.zshrc`（ローダーのみ。本体は `shell/`） |
+| `bash/bashrc` | `~/.bashrc`（ローダーのみ。本体は `shell/`） |
+| `shell/base.sh` | リンクしない。両ローダーが読む共通 base（PATH・mise・トークン。装飾なし） |
+| `shell/human.sh` | リンクしない。人間用プロファイルのときだけ両ローダーが読む（alias 等） |
 | `git/config` | `~/.config/git/config` |
 | `ghostty/config.ghostty` | macOS: `~/Library/Application Support/com.mitchellh.ghostty/`、Linux: `~/.config/ghostty/` |
 | `helix/` | `~/.config/helix/` |
@@ -38,6 +41,13 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 | `scripts/mise-group` | `~/.local/bin/mise-group` |
 | `launchd/` `systemd/` | 手動で有効化（下記） |
 
+## シェルのプロファイル
+
+`zsh` / `bash` どちらのローダーも、共通 base（`shell/base.sh`）を読んでから、プロファイルで人間用レイヤーを足すかどうかを決める。
+
+- 既定（human）: base + starship・zoxide・補完・`shell/human.sh` の alias
+- `DOTFILES_PROFILE=ai`: base のみ。プロンプト装飾や意味の変わる alias を入れず、エージェントやスクリプトでも決定的に動く最小構成にする
+
 ## 仕事用・マシン固有の設定
 
 リポジトリに入れず、次のファイルに置く（無ければ無視される）。
@@ -45,7 +55,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 | ファイル | 用途 |
 | --- | --- |
 | `~/.config/git/work` | `grus-systems/` 配下で使う名前・メール（`git/config` の `includeIf` で読む） |
-| `~/.zshrc.local` | トークンなどの環境変数 |
+| `~/.zshrc.local` / `~/.bashrc.local` | トークンなどの環境変数 |
 | `<dir>/mise.toml` | そのディレクトリだけで使うツール |
 
 `~/.gitconfig` は触らない。
