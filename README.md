@@ -18,3 +18,15 @@ macOS (zsh / Ghostty / helix / starship / mise) の設定。
 - `config.plus.toml`: 追加分。`MISE_ENV=plus mise install` で最小構成に重ねて入る
 
 秘密情報（トークン等）は置かない。
+
+## 自動アップデート (launchd)
+
+`launchd/` の plist を有効化すると毎日 12:00 に `mise upgrade`（plus 込み）が走る。
+
+```sh
+ln -sf "$PWD/launchd/dev.q0tzly.mise-upgrade.plist" ~/Library/LaunchAgents/
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/dev.q0tzly.mise-upgrade.plist
+launchctl kickstart gui/$(id -u)/dev.q0tzly.mise-upgrade   # 手動実行
+```
+
+ログ: `~/Library/Logs/mise-upgrade.log`
