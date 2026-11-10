@@ -17,7 +17,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 - `--link-only`: symlink だけ張り、mise は入れない
 - Ghostty 本体は入れない
 - 前提: `curl` と `git`（macOS は `xcode-select --install`）、`zsh`。Linux で plus（`cargo:` 系）を入れるなら C コンパイラ（例: `build-essential`）も要る
-- Linux でも動くが、まだ実機では試していない
+- Linux は Ubuntu 24.04 (aarch64) のコンテナで `install.sh`（最小構成）と `scripts/mise-upgrade.sh` を確認済み。systemd の timer は未確認
 
 ## 構成
 
