@@ -1,0 +1,14 @@
+# Hardware / EDA tools (GrusArch). Not managed by mise: KLayout.app, the LibreLane
+# Docker image (ghcr.io/librelane/librelane, needs colima/docker), sky130 PDK tarballs.
+# These entries replace manual installs under ~/.local/opt; the github: ones are untested.
+[tools]
+"cargo:veryl" = "latest"
+just = "latest"
+"github:zachjs/sv2v" = "latest"
+"github:YosysHQ/oss-cad-suite-build" = "latest"
+"github:xpack-dev-tools/riscv-none-elf-gcc-xpack" = "15.2.0-1"
+# pipx: tools need uv. librelane must match the Docker image tag.
+uv = "latest"
+python = "latest"
+"pipx:librelane" = "3.0.16"
+"pipx:fusesoc" = "latest"

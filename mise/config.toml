@@ -1,5 +1,4 @@
-# Minimal set: everything the shell config and daily editing rely on.
-# Extra tools live in config.plus.toml (enable with MISE_ENV=plus).
+# Core: always installed. Optional tools live in groups/ (see `mise-group list`).
 [tools]
 bat = "latest"
 eza = "latest"
@@ -11,3 +10,6 @@ helix = "latest"
 ripgrep = "latest"
 starship = "latest"
 zoxide = "latest"
+# flp is built from source with cargo, so core needs rust.
+rust = "latest"
+"cargo:flp" = "latest"

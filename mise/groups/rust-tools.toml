@@ -1,0 +1,6 @@
+[tools]
+cargo-binstall = "latest"
+"cargo:cargo-sweep" = "latest"
+"cargo:furl-cli" = "latest"
+"cargo:onefetch" = "latest"
+"cargo:ripget" = "latest"

@@ -1,0 +1,6 @@
+[tools]
+go = "latest"
+node = "latest"
+bun = "latest"
+python = "latest"
+uv = "latest"

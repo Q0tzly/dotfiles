@@ -1,21 +1,25 @@
 #!/bin/bash
 # Bootstrap dotfiles on a fresh macOS or Linux machine (needs network):
 #   curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | bash
-#   curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | bash -s -- --plus
-# Flags: --plus (also install config.plus.toml tools), --link-only (skip mise install)
+#   curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | bash -s -- --groups lang,ai
+# Flags: --groups a,b (enable mise tool groups, see mise/groups/), --all (every group),
+#        --link-only (skip mise install)
 set -euo pipefail
 
 REPO_URL="https://github.com/Q0tzly/dotfiles.git"
 DOTFILES="${DOTFILES:-$HOME/dev/github.com/q0tzly/dotfiles}"
 OS="${DOTFILES_OS:-$(uname -s)}"
-PLUS=0
+GROUPS_TO_ENABLE=""
+ALL_GROUPS=0
 LINK_ONLY=0
-for arg in "$@"; do
-  case "$arg" in
-    --plus) PLUS=1 ;;
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --groups) GROUPS_TO_ENABLE="${2:?--groups needs a comma-separated list}"; shift ;;
+    --all) ALL_GROUPS=1 ;;
     --link-only) LINK_ONLY=1 ;;
-    *) echo "unknown flag: $arg" >&2; exit 1 ;;
+    *) echo "unknown flag: $1" >&2; exit 1 ;;
   esac
+  shift
 done
 
 log() { printf '==> %s\n' "$*"; }
@@ -63,7 +67,7 @@ link helix/config.toml "$HOME/.config/helix/config.toml"
 link helix/languages.toml "$HOME/.config/helix/languages.toml"
 link starship/starship.toml "$HOME/.config/starship.toml"
 link mise/config.toml "$HOME/.config/mise/config.toml"
-link mise/config.plus.toml "$HOME/.config/mise/config.plus.toml"
+link scripts/mise-group "$HOME/.local/bin/mise-group"
 link cargo/config.toml "$HOME/.cargo/config.toml"
 
 # Untracked, machine-specific secrets go here; keep it private.
@@ -72,6 +76,12 @@ if [[ ! -e "$HOME/.zshrc.local" ]]; then
   log "Created $HOME/.zshrc.local"
 fi
 chmod 600 "$HOME/.zshrc.local"
+
+if [[ $ALL_GROUPS -eq 1 ]]; then
+  "$DOTFILES/scripts/mise-group" enable --no-install $("$DOTFILES/scripts/mise-group" names)
+elif [[ -n "$GROUPS_TO_ENABLE" ]]; then
+  "$DOTFILES/scripts/mise-group" enable --no-install ${GROUPS_TO_ENABLE//,/ }
+fi
 
 if [[ $LINK_ONLY -eq 1 ]]; then
   log "Done (links only)"
@@ -85,11 +95,7 @@ if ! command -v mise >/dev/null; then
 fi
 
 log "Installing tools with mise"
-if [[ $PLUS -eq 1 ]]; then
-  MISE_ENV=plus mise install --yes
-else
-  mise install --yes
-fi
+mise install --yes
 
 command -v zsh >/dev/null || log "zsh not found: install it with your package manager (the shell config is for zsh)"
 log "Done. Open a new shell. Ghostty itself is not installed by this script."
