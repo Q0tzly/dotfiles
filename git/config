@@ -5,9 +5,13 @@
 	email = git@q0tzly.dev
 [core]
 	editor = hx
+# Work identity lives outside this repo; a missing file is ignored.
+[includeIf "gitdir:~/dev/github.com/grus-systems/"]
+	path = ~/.config/git/work
+# Absolute shim path so git works from GUI apps where `mise activate` has not run.
 [credential "https://github.com"]
 	helper =
-	helper = !gh auth git-credential
+	helper = !$HOME/.local/share/mise/shims/gh auth git-credential
 [credential "https://gist.github.com"]
 	helper =
-	helper = !gh auth git-credential
+	helper = !$HOME/.local/share/mise/shims/gh auth git-credential

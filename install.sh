@@ -53,6 +53,7 @@ link helix/languages.toml "$HOME/.config/helix/languages.toml"
 link starship/starship.toml "$HOME/.config/starship.toml"
 link mise/config.toml "$HOME/.config/mise/config.toml"
 link mise/config.plus.toml "$HOME/.config/mise/config.plus.toml"
+link cargo/config.toml "$HOME/.cargo/config.toml"
 
 if [[ $LINK_ONLY -eq 1 ]]; then
   log "Done (links only)"

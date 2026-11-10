@@ -7,21 +7,12 @@ node = "latest"
 bun = "latest"
 python = "latest"
 uv = "latest"
-java = "latest"
-dotnet = "latest"
-erlang = "latest"
-elixir = "1.20.5-otp-29"
-cmake = "latest"
-tinygo = "0.42.0"
 wasm-tools = "latest"
-"github:WebAssembly/binaryen" = "latest"
-"conda:emacs" = "31.1"
 
 # Rust tooling
-sccache = "latest"
 cargo-binstall = "latest"
 "cargo:auto-oss" = "latest"
-"cargo:cargo-fuzz" = "latest"
+"cargo:cargo-sweep" = "latest"
 "cargo:flp" = "latest"
 "cargo:furl-cli" = "latest"
 "cargo:onefetch" = "latest"
@@ -32,9 +23,7 @@ cargo-binstall = "latest"
 # AI / agents
 claude = "latest"
 codex = "latest"
-ollama = "latest"
 "github:rtk-ai/rtk" = "latest"
-"npm:agent-desktop" = "latest"
 
 # Cloud / infra / web
 wrangler = { version = "latest", allow_builds = ["esbuild", "sharp", "workerd"] }
@@ -46,9 +35,8 @@ colima = "latest"
 docker-cli = "latest"
 lima = "latest"
 
-# Media / docs
+# Media
 ffmpeg = "latest"
-marp-cli = "latest"
 
 # Misc
 "go:github.com/boyter/scc/v3" = "latest"
