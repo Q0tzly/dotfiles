@@ -6,7 +6,7 @@
   <string>dev.q0tzly.mise-upgrade</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/Users/q0tzly/dev/github.com/q0tzly/dotfiles/launchd/mise-upgrade.sh</string>
+    <string>/Users/q0tzly/dev/github.com/q0tzly/dotfiles/scripts/mise-upgrade.sh</string>
   </array>
   <!-- Runs daily at 12:00; if the Mac was asleep, launchd runs it on wake. -->
   <key>StartCalendarInterval</key>

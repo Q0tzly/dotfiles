@@ -1,5 +1,5 @@
-#!/bin/zsh
-# Daily mise upgrade. launchd has no login-shell env, so set PATH/token explicitly.
+#!/bin/bash
+# Daily mise upgrade. launchd/systemd have no login-shell env, so set PATH/token explicitly.
 set -u
 export PATH="$HOME/.local/bin:/usr/bin:/bin"
 export MISE_ENV=plus

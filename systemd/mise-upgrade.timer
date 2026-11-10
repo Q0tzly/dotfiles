@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily mise upgrade
+
+[Timer]
+OnCalendar=*-*-* 12:00:00
+# Run on next boot/login if the machine was off at 12:00.
+Persistent=true
+
+[Install]
+WantedBy=timers.target
