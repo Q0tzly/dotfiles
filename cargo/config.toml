@@ -1,0 +1,3 @@
+# Debug info dominates target/ size; line tables keep backtraces readable.
+[profile.dev]
+debug = "line-tables-only"

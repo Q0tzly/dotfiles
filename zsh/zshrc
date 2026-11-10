@@ -1,54 +1,44 @@
+# Installers (Devin, LM Studio, grok, ...) append their own PATH lines to this file.
+# Review them with `git diff` and fold them into the block below.
+
+# PATH in one place: deduplicated, existing directories only.
+typeset -U path fpath
+path=(
+  $HOME/.local/bin
+  $HOME/.antigravity-ide/antigravity-ide/bin
+  $HOME/.codeium/windsurf/bin
+  $HOME/.grok/bin
+  $HOME/.lmstudio/bin
+  $path
+)
+path=($^path(N-/))
+fpath=($HOME/.grok/completions/zsh(N-/) $fpath)
+
 autoload -Uz compinit && compinit
 
-eval "$($HOME/.local/bin/mise activate zsh)"
+[[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
+
+eval "$(mise activate zsh)"
 eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"
 
 # Inside a pstty session, suppress zsh's PROMPT_SP "%" end-of-line mark
 # for the whole shell's lifetime. Toggling it per-prompt via precmd/
 # preexec doesn't work: zsh decides whether to print the mark before
 # precmd hooks run, so an unsetopt there is always one step too late.
 [[ -n "$PSTTY_SESSION" ]] && unsetopt PROMPT_SP
-eval "$(zoxide init zsh)"
-command -v rem >/dev/null && eval "$(rem init zsh)"
 
 alias zz='z ..'
-
+alias fl='furl'
 alias l='eza --git'
 alias la='eza -a --git'
 alias lt='eza -T --git -I "target|__pycache__|node_modules"'
-alias la='eza -a --git'
 alias ll='eza -l --total-size --git'
 
-alias fl="furl"
-
-command -v sccache >/dev/null && export RUSTC_WRAPPER=sccache
-
-export PATH="/Users/q0tzly/.local/bin:$PATH"
-export PATH="/Users/q0tzly/.antigravity-ide/antigravity-ide/bin:$PATH"
-
-# export GITHUB_TOKEN="$(gh auth token)"
-
-# MISE_GITHUB_TOKEN
+# Authenticated GitHub requests avoid API rate limits when mise resolves "latest".
 if token="$(gh auth token 2>/dev/null)" && [[ -n $token ]]; then
   export MISE_GITHUB_TOKEN="$token"
 fi
 
-# export ANTHROPIC_BASE_URL=http://localhost:8000
-# export ANTHROPIC_API_KEY=not-needed
-
-# Added by Devin
-export PATH="/Users/q0tzly/.codeium/windsurf/bin:$PATH"
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/q0tzly/.lmstudio/bin"
-# End of LM Studio CLI section
-
-
-[[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
-
-# >>> grok installer >>>
-export PATH="$HOME/.grok/bin:$PATH"
-fpath=(~/.grok/completions/zsh $fpath)
-autoload -Uz compinit && compinit -C
-# <<< grok installer <<<
-
+# Machine-specific settings and secrets (not tracked).
+[[ -f "$HOME/.zshrc.local" ]] && . "$HOME/.zshrc.local"
