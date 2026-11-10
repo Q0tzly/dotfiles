@@ -1,6 +1,6 @@
 autoload -Uz compinit && compinit
 
-eval "$(/Users/q0tzly/.local/bin/mise activate zsh)"
+eval "$($HOME/.local/bin/mise activate zsh)"
 eval "$(starship init zsh)"
 
 # Inside a pstty session, suppress zsh's PROMPT_SP "%" end-of-line mark
@@ -9,7 +9,7 @@ eval "$(starship init zsh)"
 # precmd hooks run, so an unsetopt there is always one step too late.
 [[ -n "$PSTTY_SESSION" ]] && unsetopt PROMPT_SP
 eval "$(zoxide init zsh)"
-eval "$(rem init zsh)"
+command -v rem >/dev/null && eval "$(rem init zsh)"
 
 alias zz='z ..'
 
@@ -21,7 +21,7 @@ alias ll='eza -l --total-size --git'
 
 alias fl="furl"
 
-export RUSTC_WRAPPER=sccache
+command -v sccache >/dev/null && export RUSTC_WRAPPER=sccache
 
 export PATH="/Users/q0tzly/.local/bin:$PATH"
 export PATH="/Users/q0tzly/.antigravity-ide/antigravity-ide/bin:$PATH"
@@ -44,7 +44,7 @@ export PATH="$PATH:/Users/q0tzly/.lmstudio/bin"
 # End of LM Studio CLI section
 
 
-. "$HOME/.local/bin/env"
+[[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
 
 # >>> grok installer >>>
 export PATH="$HOME/.grok/bin:$PATH"
