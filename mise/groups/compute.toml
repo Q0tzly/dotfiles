@@ -4,3 +4,5 @@
 # uv is the pypi backend's runtime: mise needs it to install the pypi tools below.
 uv = "latest"
 "pypi:google-colab-cli" = "latest"
+# kaggle's code imports six, but 2.2.5 does not declare it; inject it into the tool env.
+"pypi:kaggle" = { version = "latest", with = ["six"] }
