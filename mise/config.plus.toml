@@ -43,6 +43,7 @@ cloudflared = "latest"
 hugo = "latest"
 rclone = "latest"
 colima = "latest"
+docker-cli = "latest"
 lima = "latest"
 
 # Media / docs
