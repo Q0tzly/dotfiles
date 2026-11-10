@@ -69,6 +69,10 @@ link starship/starship.toml "$HOME/.config/starship.toml"
 link mise/config.toml "$HOME/.config/mise/config.toml"
 link scripts/mise-group "$HOME/.local/bin/mise-group"
 link cargo/config.toml "$HOME/.cargo/config.toml"
+# One global instruction file for every coding agent. Codex does not expand
+# @imports, so the file must be self-contained.
+link ai/AGENTS.md "$HOME/.claude/CLAUDE.md"
+link ai/AGENTS.md "$HOME/.codex/AGENTS.md"
 
 # Untracked, machine-specific secrets go here; keep it private.
 if [[ ! -e "$HOME/.zshrc.local" ]]; then

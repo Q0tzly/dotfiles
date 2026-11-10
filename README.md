@@ -31,6 +31,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 | `helix/` | `~/.config/helix/` |
 | `starship/starship.toml` | `~/.config/starship.toml` |
 | `cargo/config.toml` | `~/.cargo/config.toml` |
+| `ai/AGENTS.md` | `~/.claude/CLAUDE.md` と `~/.codex/AGENTS.md` |
 | `mise/config.toml` | `~/.config/mise/config.toml` |
 | `mise/groups/` | `mise-group enable` で `~/.config/mise/conf.d/` にリンク |
 | `scripts/mise-group` | `~/.local/bin/mise-group` |
@@ -47,6 +48,14 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 | `<dir>/mise.toml` | そのディレクトリだけで使うツール |
 
 `~/.gitconfig` は触らない。
+
+## コーディングエージェント
+
+Claude Code と Codex のグローバル指示は `ai/AGENTS.md` の 1 ファイルで共通（旧 for-AI リポジトリ）。
+
+- Codex は `@パス` の読み込みに対応していないので、このファイルは他を読み込まずに完結させる
+- `~/.claude/settings.json` と `~/.claude/skills/` はリンクしない。設定はマシンの状態を含み、skills にはプラグインが自動で書き込むため
+- 実装を Gemini Flash に委任する仕組みは別リポジトリの [subcon](https://github.com/Q0tzly/subcon)。手順は `subcon guide` で読む
 
 ## mise
 
