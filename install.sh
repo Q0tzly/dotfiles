@@ -69,13 +69,10 @@ link starship/starship.toml "$HOME/.config/starship.toml"
 link mise/config.toml "$HOME/.config/mise/config.toml"
 link scripts/mise-group "$HOME/.local/bin/mise-group"
 link cargo/config.toml "$HOME/.cargo/config.toml"
-# Coding agents' global instructions. ~/.claude/skills and settings.json stay
-# local: plugins write into skills/, and settings.json holds machine state.
-link claude/CLAUDE.md "$HOME/.claude/CLAUDE.md"
-for d in agents commands hooks output-styles; do
-  link "claude/$d" "$HOME/.claude/$d"
-done
-link codex/AGENTS.md "$HOME/.codex/AGENTS.md"
+# One global instruction file for every coding agent. Codex does not expand
+# @imports, so the file must be self-contained.
+link ai/AGENTS.md "$HOME/.claude/CLAUDE.md"
+link ai/AGENTS.md "$HOME/.codex/AGENTS.md"
 
 # Untracked, machine-specific secrets go here; keep it private.
 if [[ ! -e "$HOME/.zshrc.local" ]]; then
