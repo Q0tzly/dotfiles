@@ -1,0 +1,15 @@
+#!/bin/sh
+# Guard the base files. Tools append to them through the home symlinks
+# (installers add PATH lines to the rc loaders, editors and scripts touch
+# the shared base), and those automatic edits must not slip into a commit.
+# An intentional base edit is committed with: ALLOW_BASE=1 git commit ...
+[ "${ALLOW_BASE:-0}" = "1" ] && exit 0
+
+hits="$(git diff --cached --name-only | grep -E '^(shell/base\.sh|mise/config\.toml|zsh/zshrc|bash/bashrc)$' || true)"
+if [ -n "$hits" ]; then
+  echo "pre-commit: base file(s) staged:" >&2
+  echo "$hits" >&2
+  echo "These files are edited through symlinks by tools. If this change is intentional, re-run with ALLOW_BASE=1." >&2
+  exit 1
+fi
+exit 0

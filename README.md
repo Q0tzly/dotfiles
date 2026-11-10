@@ -36,7 +36,8 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 | `starship/starship.toml` | `~/.config/starship.toml` |
 | `cargo/config.toml` | `~/.cargo/config.toml` |
 | `ai/AGENTS.md` | `~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`、`~/AGENTS.md`（Muse） |
-| `mise/config.toml` | `~/.config/mise/config.toml` |
+| `mise/config.toml` | `~/.config/mise/conf.d/base.toml`（base。`~/.config/mise/config.toml` はマシンローカルで追跡しない） |
+| `hooks/` | リンクしない。`core.hooksPath` で有効化。base ファイルの誤コミット防止 |
 | `mise/groups/` | `mise-group enable` で `~/.config/mise/conf.d/` にリンク |
 | `scripts/mise-group` | `~/.local/bin/mise-group` |
 | `launchd/` `systemd/` | 手動で有効化（下記） |
@@ -70,7 +71,8 @@ Claude Code・Codex・Muse のグローバル指示は `ai/AGENTS.md` の 1 フ�
 
 ## mise
 
-- `mise/config.toml`: core。常に入る最小構成
+- `mise/config.toml`: core。常に入る最小構成。`conf.d/base.toml` にリンクされる。`mise use -g` の書き込み先 `~/.config/mise/config.toml` はマシンローカル（追跡しない）ので、ツールを足しても base は汚れない
+- base ファイル（`shell/base.sh`、`mise/config.toml`、rc ローダー）は `hooks/pre-commit` が誤コミットを止める。意図的な編集は `ALLOW_BASE=1 git commit ...` で通す
 - `mise/groups/<名前>.toml`: ジャンルごとの追加ツール。`mise-group` で入れたり消したりする
 
 ```sh

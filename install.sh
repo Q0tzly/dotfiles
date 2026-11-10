@@ -72,7 +72,14 @@ esac
 link helix/config.toml "$HOME/.config/helix/config.toml"
 link helix/languages.toml "$HOME/.config/helix/languages.toml"
 link starship/starship.toml "$HOME/.config/starship.toml"
-link mise/config.toml "$HOME/.config/mise/config.toml"
+# The mise base lives in conf.d/, not at config.toml: `mise use -g` writes to
+# ~/.config/mise/config.toml, and that file must stay machine-local so tool
+# installs never edit the tracked base through a symlink.
+if [[ -L "$HOME/.config/mise/config.toml" && "$(readlink "$HOME/.config/mise/config.toml")" == "$DOTFILES/mise/config.toml" ]]; then
+  rm "$HOME/.config/mise/config.toml"
+  log "Removed legacy ~/.config/mise/config.toml link (base moved to conf.d/base.toml)"
+fi
+link mise/config.toml "$HOME/.config/mise/conf.d/base.toml"
 link scripts/mise-group "$HOME/.local/bin/mise-group"
 link cargo/config.toml "$HOME/.cargo/config.toml"
 # One global instruction file for every coding agent. Codex does not expand
@@ -81,6 +88,10 @@ link ai/AGENTS.md "$HOME/.claude/CLAUDE.md"
 link ai/AGENTS.md "$HOME/.codex/AGENTS.md"
 # Muse reads ~/AGENTS.md as its operating manual, so the same file goes there too.
 link ai/AGENTS.md "$HOME/AGENTS.md"
+
+# Tracked hooks: the pre-commit hook guards base files against accidental
+# commits of edits that tools made through the symlinks.
+git -C "$DOTFILES" config core.hooksPath hooks
 
 if [[ $WITH_SUBCON -eq 1 ]]; then
   if [[ -d "$SUBCON/.git" ]]; then
