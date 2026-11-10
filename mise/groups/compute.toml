@@ -1,0 +1,6 @@
+# Remote / free compute access (Colab, Kaggle, quantum clouds, ...).
+# CLIs that let humans and agents run jobs on borrowed compute.
+[tools]
+# uv is the pypi backend's runtime: mise needs it to install the pypi tools below.
+uv = "latest"
+"pypi:google-colab-cli" = "latest"
