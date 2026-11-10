@@ -1,15 +1,16 @@
-# Hardware / EDA tools (GrusArch). Not managed by mise: KLayout.app, the LibreLane
-# Docker image (ghcr.io/librelane/librelane, needs colima/docker), sky130 PDK tarballs.
-# These entries replace manual installs under ~/.local/opt; the github: ones are untested.
+# Hardware / EDA tools (GrusArch). Everything here is pinned to the version GrusArch
+# development was verified with, so the daily `mise upgrade` never changes it; bump by hand.
+#
+# Kept as manual installs under ~/.local/opt (scripts reference those paths; mise
+# cannot reproduce the exact builds, or they are too large to duplicate):
+#   oss-cad-suite 20260712   darwin-arm64 tarball from YosysHQ/oss-cad-suite-build
+#                            (the github backend no longer lists this build)
+#   xPack riscv-none-elf-gcc 15.2.0-1
+#   librelane 3.0.16         venv; must match ghcr.io/librelane/librelane:3.0.16
+#   fusesoc 2.4.7            venv
+#   sky130 PDK, KLayout.app
 [tools]
 rust = "latest"
-"cargo:veryl" = "latest"
+"cargo:veryl" = "0.22.1"
+"github:zachjs/sv2v" = "0.0.13"
 just = "latest"
-"github:zachjs/sv2v" = "latest"
-"github:YosysHQ/oss-cad-suite-build" = "latest"
-"github:xpack-dev-tools/riscv-none-elf-gcc-xpack" = "15.2.0-1"
-# pipx: tools need uv. librelane must match the Docker image tag.
-uv = "latest"
-python = "latest"
-"pipx:librelane" = "3.0.16"
-"pipx:fusesoc" = "latest"
