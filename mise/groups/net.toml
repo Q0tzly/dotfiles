@@ -1,0 +1,7 @@
+# Network / remote access (tailnet, tunnels, ...).
+# Reachability for machines I own, mainly Linux / server boxes;
+# macOS uses the official Tailscale app instead.
+# Note: the daemon still needs a one-time system service setup
+# (tailscaled as a systemd service) after the tools are installed.
+[tools]
+tailscale = "latest"
