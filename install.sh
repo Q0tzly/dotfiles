@@ -64,6 +64,7 @@ link zsh/zshrc "$HOME/.zshrc"
 link bash/bashrc "$HOME/.bashrc"
 # XDG path on purpose: leaves ~/.gitconfig free for machine-specific settings.
 link git/config "$HOME/.config/git/config"
+link git/hooks "$HOME/.config/git/hooks"
 case "$OS" in
   Darwin) link ghostty/config.ghostty "$HOME/Library/Application Support/com.mitchellh.ghostty/config.ghostty" ;;
   Linux) link ghostty/config.ghostty "$HOME/.config/ghostty/config.ghostty" ;;

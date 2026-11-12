@@ -5,6 +5,11 @@
 	email = git@q0tzly.dev
 [core]
 	editor = hx
+	# One global hooks dir (linked from this repo's git/hooks by install.sh):
+	# the commit-msg attribution check applies to every repo, new clones
+	# included, without per-repo setup. The dotfiles repo itself overrides
+	# this locally (hooks/) and reaches the same script through a symlink.
+	hooksPath = ~/.config/git/hooks
 # Work identity lives outside this repo; a missing file is ignored.
 [includeIf "gitdir:~/dev/github.com/grus-systems/"]
 	path = ~/.config/git/work

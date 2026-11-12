@@ -1,0 +1,7 @@
+#!/bin/bash
+# Attribution rule (2026-11-12): every commit carries a Co-Authored-By
+# trailer naming the implementing agent (and Reviewed-By when a different
+# agent reviewed). Installed globally via core.hooksPath in git/config, so
+# new clones are covered without per-repo setup. Bypass for a commit that
+# genuinely has no implementing agent: git commit --no-verify
+grep -q "^Co-Authored-By: " "$1" || { echo "commit rejected: missing Co-Authored-By trailer (attribution rule; bypass with --no-verify if no agent implemented this)" >&2; exit 1; }
