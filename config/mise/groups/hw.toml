@@ -11,6 +11,6 @@
 #   sky130 PDK, KLayout.app
 [tools]
 rust = "latest"
-"cargo:veryl" = "0.22.1"
+"github:dalance/veryl" = "0.22.1"
 "github:zachjs/sv2v" = "0.0.13"
 just = "latest"
