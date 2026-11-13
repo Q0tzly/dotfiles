@@ -12,6 +12,8 @@ _dotfiles() {
   elif (( CURRENT >= 3 )) && [[ "${words[2]}" == update ]]; then
     local -a flags=(
       '--no-upgrade:pull and re-link only'
+      '--force:ignore the minimum_release_age gate and take the newest'
+      '-f:alias of --force'
       '--auto:non-interactive mode for timers; skip cleanly when unsafe'
     )
     _describe -t flags 'update flag' flags

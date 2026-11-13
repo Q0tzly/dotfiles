@@ -53,6 +53,7 @@ dotfiles status   # コミット、上流との差分、ローカル変更、ぶ
 dotfiles check    # 最新なら exit 0、更新があれば exit 1（スクリプト用）
 dotfiles update   # pull（fast-forward のみ）→ 再リンク → mise upgrade
 dotfiles update --no-upgrade   # pull と再リンクだけ
+dotfiles update -f   # --force。今回だけ mise の minimum_release_age（リリース後24時間の保留）を無視して最新を取る
 dotfiles update --auto         # タイマー用。安全に進められないときは静かに諦める
 ```
 

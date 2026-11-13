@@ -5,6 +5,8 @@
 #   dotfiles check            exit 0 when up to date, 1 when an update is available
 #   dotfiles update           pull (fast-forward only), re-link, mise upgrade
 #   dotfiles update --no-upgrade   pull and re-link only
+#   dotfiles update -f|--force     also ignore mise's minimum_release_age
+#                             gate for this run and take the newest releases
 #   dotfiles update --auto    for launchd/systemd: quiet, never interactive,
 #                             skips cleanly when a pull would be unsafe
 #
@@ -82,10 +84,11 @@ cmd_check() {
 }
 
 cmd_update() {
-  local do_upgrade=1 arg
+  local do_upgrade=1 force=0 arg
   for arg in "$@"; do
     case "$arg" in
       --no-upgrade) do_upgrade=0 ;;
+      -f|--force) force=1 ;;
       --auto) AUTO=1 ;;
       *) echo "unknown flag: $arg" >&2; exit 1 ;;
     esac
@@ -127,8 +130,13 @@ cmd_update() {
   DOTFILES="$ROOT" "$ROOT/install.sh" --link-only >/dev/null
   note "links refreshed"
   if [[ $do_upgrade -eq 1 && -x "$ROOT/system/mise-upgrade.sh" ]]; then
-    log "mise upgrade"
-    "$ROOT/system/mise-upgrade.sh"
+    if [[ $force -eq 1 ]]; then
+      log "mise upgrade (force: minimum_release_age ignored for this run)"
+      MISE_MINIMUM_RELEASE_AGE=0 "$ROOT/system/mise-upgrade.sh"
+    else
+      log "mise upgrade"
+      "$ROOT/system/mise-upgrade.sh"
+    fi
   fi
   note "done"
 }
@@ -139,5 +147,5 @@ case "${1:-status}" in
   update) shift; cmd_update "$@" ;;
   -h|--help|help)
     sed -n '2,20p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//' ;;
-  *) echo "usage: dotfiles [status|check|update [--no-upgrade] [--auto]]" >&2; exit 1 ;;
+  *) echo "usage: dotfiles [status|check|update [--no-upgrade] [-f|--force] [--auto]]" >&2; exit 1 ;;
 esac
