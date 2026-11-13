@@ -2,7 +2,7 @@
 # No prompt, no completion, no decoration, so AI agents and scripts get
 # exactly the same environment as a human's non-interactive shell.
 # Human-only extras live in shell/human.sh and load only in the human
-# profile (see the loaders: zsh/zshrc, bash/bashrc).
+# profile (see the loaders: shell/zshrc, shell/bashrc).
 # This file must stay POSIX sh compatible: both shells source it.
 
 # PATH in one place: deduplicated, existing directories only.

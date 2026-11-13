@@ -20,26 +20,29 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 - `--subcon`: [subcon](https://github.com/Q0tzly/subcon) も clone（`SUBCON=` で変更可）して、その `install.sh` を実行する。`subcon` を PATH に、Muse が入っていればそのスキルも入れる
 - Ghostty 本体は入れない
 - 前提: `curl` と `git`（macOS は `xcode-select --install`）、`zsh`。Linux で `cargo:` 系（`rust-tools` や `hw` グループ）を入れるなら C コンパイラ（例: `build-essential`）も要る
-- Linux は Ubuntu 24.04 (aarch64) のコンテナで `install.sh` と `scripts/mise-upgrade.sh` を確認済み。systemd の timer は未確認
+- Linux は Ubuntu 24.04 (aarch64) のコンテナで `install.sh` と `system/mise-upgrade.sh` を確認済み。systemd の timer は未確認
 
 ## 構成
 
+トップレベルは5つだけ：`config/`（`~/.config` 等へリンクする設定）、`shell/`（シェル）、`ai/`（エージェント指示）、`system/`（OS のサービス定義とそのスクリプト）、`.githooks/`（このリポジトリ自身のフック）。
+
 | path | リンク先 |
 | --- | --- |
-| `zsh/zshrc` | `~/.zshrc`（ローダーのみ。本体は `shell/`） |
-| `bash/bashrc` | `~/.bashrc`（ローダーのみ。本体は `shell/`） |
+| `shell/zshrc` | `~/.zshrc`（ローダーのみ。本体は同じ `shell/`） |
+| `shell/bashrc` | `~/.bashrc`（ローダーのみ。本体は同じ `shell/`） |
 | `shell/base.sh` | リンクしない。両ローダーが読む共通 base（PATH・mise・トークン。装飾なし） |
 | `shell/human.sh` | リンクしない。人間用プロファイルのときだけ両ローダーが読む（alias 等） |
-| `git/config` | `~/.config/git/config` |
-| `ghostty/config.ghostty` | macOS: `~/Library/Application Support/com.mitchellh.ghostty/`、Linux: `~/.config/ghostty/` |
-| `helix/` | `~/.config/helix/` |
-| `starship/starship.toml` | `~/.config/starship.toml` |
-| `cargo/config.toml` | `~/.cargo/config.toml` |
+| `config/git/config` | `~/.config/git/config` |
+| `config/git/hooks/` | `~/.config/git/hooks`。`config/git/config` の `core.hooksPath` で全 repo に効く（帰属トレーラの強制） |
+| `config/ghostty/config.ghostty` | macOS: `~/Library/Application Support/com.mitchellh.ghostty/`、Linux: `~/.config/ghostty/` |
+| `config/helix/` | `~/.config/helix/` |
+| `config/starship/starship.toml` | `~/.config/starship.toml` |
+| `config/cargo/config.toml` | `~/.cargo/config.toml` |
 | `ai/AGENTS.md` | `~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`、`~/AGENTS.md`（Muse） |
-| `mise/config.toml` | `~/.config/mise/conf.d/base.toml`（base。`~/.config/mise/config.toml` はマシンローカルで追跡しない） |
-| `hooks/` | リンクしない。`core.hooksPath` で有効化。base ファイルの誤コミット防止 |
-| `mise/groups/` | `~/.config/mise/groups`（定義置き場）。有効化は別 repo の `mise-group` が `~/.config/mise/conf.d/` へリンク |
-| `launchd/` `systemd/` | 手動で有効化（下記） |
+| `config/mise/config.toml` | `~/.config/mise/conf.d/base.toml`（base。`~/.config/mise/config.toml` はマシンローカルで追跡しない） |
+| `.githooks/` | リンクしない。この repo 自身のフック。`core.hooksPath` で有効化。base ファイルの誤コミット防止 |
+| `config/mise/groups/` | `~/.config/mise/groups`（定義置き場）。有効化は別 repo の `mise-group` が `~/.config/mise/conf.d/` へリンク |
+| `system/launchd/` `system/systemd/` `system/mise-upgrade.sh` | 手動で有効化（下記） |
 
 ## シェルのプロファイル
 
@@ -54,7 +57,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 
 | ファイル | 用途 |
 | --- | --- |
-| `~/.config/git/work` | `grus-systems/` 配下で使う名前・メール（`git/config` の `includeIf` で読む） |
+| `~/.config/git/work` | `grus-systems/` 配下で使う名前・メール（`config/git/config` の `includeIf` で読む） |
 | `~/.zshrc.local` / `~/.bashrc.local` | トークンなどの環境変数 |
 | `<dir>/mise.toml` | そのディレクトリだけで使うツール |
 
@@ -70,9 +73,9 @@ Claude Code・Codex・Muse のグローバル指示は `ai/AGENTS.md` の 1 フ�
 
 ## mise
 
-- `mise/config.toml`: core。常に入る最小構成。`conf.d/base.toml` にリンクされる。`mise use -g` の書き込み先 `~/.config/mise/config.toml` はマシンローカル（追跡しない）ので、ツールを足しても base は汚れない
-- base ファイル（`shell/base.sh`、`mise/config.toml`、rc ローダー）は `hooks/pre-commit` が誤コミットを止める。意図的な編集は `ALLOW_BASE=1 git commit ...` で通す
-- `mise/groups/<名前>.toml`: ジャンルごとの追加ツール。`mise-group` で入れたり消したりする
+- `config/mise/config.toml`: core。常に入る最小構成。`conf.d/base.toml` にリンクされる。`mise use -g` の書き込み先 `~/.config/mise/config.toml` はマシンローカル（追跡しない）ので、ツールを足しても base は汚れない
+- base ファイル（`shell/base.sh`、`config/mise/config.toml`、rc ローダー）は `.githooks/pre-commit` が誤コミットを止める。意図的な編集は `ALLOW_BASE=1 git commit ...` で通す
+- `config/mise/groups/<名前>.toml`: ジャンルごとの追加ツール。`mise-group` で入れたり消したりする
 - `mise-group` 本体は別プロジェクト [mise-group](https://github.com/Q0tzly/mise-group)（2026-11-13 に分離、Go 製バイナリ）。このリポジトリにはグループ定義だけを置き、本体は base ツールとして mise 自身が入れる（`"github:Q0tzly/mise-group"`）。初回構築時だけ、install.sh が `mise exec` で先行して借りてくる（`--no-mise-group` でその借用を無効化）
 
 ```sh
@@ -88,18 +91,18 @@ mise-group disable lang          # 無効化して、そのグループのツー
 
 ## Rust の target/ が重いとき
 
-- `cargo/config.toml` で dev ビルドのデバッグ情報を行番号のみに減らしている（サイズの大半を占めるため）。
+- `config/cargo/config.toml` で dev ビルドのデバッグ情報を行番号のみに減らしている（サイズの大半を占めるため）。
 - 古いビルド成果物は `cargo sweep --recursive --time 30 <path>` で消せる（path 省略で今のディレクトリ。`rust-tools` グループの `cargo-sweep`）。例: `cargo sweep -r -t 30 .` / `cargo sweep -r -t 30 ~/dev`
 - sccache は外した。キャッシュが別に数 GB 増えるうえ、incremental ビルドと相性が悪く、target/ のサイズも減らないため。
 
 ## 自動アップデート
 
-毎日 12:00 に `scripts/mise-upgrade.sh`（core と有効なグループを `mise upgrade`、prune はしない）が走る。ログは mac が `~/Library/Logs/mise-upgrade.log`、Linux は `journalctl --user -u mise-upgrade`。
+毎日 12:00 に `system/mise-upgrade.sh`（core と有効なグループを `mise upgrade`、prune はしない）が走る。ログは mac が `~/Library/Logs/mise-upgrade.log`、Linux は `journalctl --user -u mise-upgrade`。
 
 macOS (launchd):
 
 ```sh
-ln -sf "$PWD/launchd/dev.q0tzly.mise-upgrade.plist" ~/Library/LaunchAgents/
+ln -sf "$PWD/system/launchd/dev.q0tzly.mise-upgrade.plist" ~/Library/LaunchAgents/
 launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/dev.q0tzly.mise-upgrade.plist
 launchctl kickstart gui/$(id -u)/dev.q0tzly.mise-upgrade   # 手動実行
 ```
@@ -108,7 +111,7 @@ Linux (systemd user):
 
 ```sh
 mkdir -p ~/.config/systemd/user
-ln -sf "$PWD"/systemd/mise-upgrade.{service,timer} ~/.config/systemd/user/
+ln -sf "$PWD"/system/systemd/mise-upgrade.{service,timer} ~/.config/systemd/user/
 systemctl --user daemon-reload
 systemctl --user enable --now mise-upgrade.timer
 systemctl --user start mise-upgrade.service   # 手動実行

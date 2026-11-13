@@ -2,7 +2,7 @@
 # Bootstrap dotfiles on a fresh macOS or Linux machine (needs network):
 #   curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | bash
 #   curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | bash -s -- --groups lang,ai
-# Flags: --groups a,b (enable mise tool groups, see mise/groups/), --all (every group),
+# Flags: --groups a,b (enable mise tool groups, see config/mise/groups/), --all (every group),
 #        --link-only (skip mise install)
 #        --subcon (also clone and install subcon, which links itself and its Muse skill)
 #        --no-mise-group (never fetch mise-group via mise exec for group enabling;
@@ -64,32 +64,32 @@ link() {
   log "Linked $dst"
 }
 
-link zsh/zshrc "$HOME/.zshrc"
-link bash/bashrc "$HOME/.bashrc"
+link shell/zshrc "$HOME/.zshrc"
+link shell/bashrc "$HOME/.bashrc"
 # XDG path on purpose: leaves ~/.gitconfig free for machine-specific settings.
-link git/config "$HOME/.config/git/config"
-link git/hooks "$HOME/.config/git/hooks"
+link config/git/config "$HOME/.config/git/config"
+link config/git/hooks "$HOME/.config/git/hooks"
 case "$OS" in
-  Darwin) link ghostty/config.ghostty "$HOME/Library/Application Support/com.mitchellh.ghostty/config.ghostty" ;;
-  Linux) link ghostty/config.ghostty "$HOME/.config/ghostty/config.ghostty" ;;
+  Darwin) link config/ghostty/config.ghostty "$HOME/Library/Application Support/com.mitchellh.ghostty/config.ghostty" ;;
+  Linux) link config/ghostty/config.ghostty "$HOME/.config/ghostty/config.ghostty" ;;
   *) echo "unsupported OS: $OS" >&2; exit 1 ;;
 esac
-link helix/config.toml "$HOME/.config/helix/config.toml"
-link helix/languages.toml "$HOME/.config/helix/languages.toml"
-link starship/starship.toml "$HOME/.config/starship.toml"
+link config/helix/config.toml "$HOME/.config/helix/config.toml"
+link config/helix/languages.toml "$HOME/.config/helix/languages.toml"
+link config/starship/starship.toml "$HOME/.config/starship.toml"
 # The mise base lives in conf.d/, not at config.toml: `mise use -g` writes to
 # ~/.config/mise/config.toml, and that file must stay machine-local so tool
 # installs never edit the tracked base through a symlink.
-if [[ -L "$HOME/.config/mise/config.toml" && "$(readlink "$HOME/.config/mise/config.toml")" == "$DOTFILES/mise/config.toml" ]]; then
+if [[ -L "$HOME/.config/mise/config.toml" && "$(readlink "$HOME/.config/mise/config.toml")" == "$DOTFILES/config/mise/config.toml" ]]; then
   rm "$HOME/.config/mise/config.toml"
   log "Removed legacy ~/.config/mise/config.toml link (base moved to conf.d/base.toml)"
 fi
-link mise/config.toml "$HOME/.config/mise/conf.d/base.toml"
+link config/mise/config.toml "$HOME/.config/mise/conf.d/base.toml"
 # Group definitions live here; the mise-group tool itself is a separate
 # project installed by mise (see the base tools), and its default groups
 # directory is ~/.config/mise/groups.
-link mise/groups "$HOME/.config/mise/groups"
-link cargo/config.toml "$HOME/.cargo/config.toml"
+link config/mise/groups "$HOME/.config/mise/groups"
+link config/cargo/config.toml "$HOME/.cargo/config.toml"
 # One global instruction file for every coding agent. Codex does not expand
 # @imports, so the file must be self-contained.
 link ai/AGENTS.md "$HOME/.claude/CLAUDE.md"
@@ -99,11 +99,11 @@ link ai/AGENTS.md "$HOME/AGENTS.md"
 
 # Tracked hooks: the pre-commit hook guards base files against accidental
 # commits of edits that tools made through the symlinks.
-git -C "$DOTFILES" config core.hooksPath hooks
+git -C "$DOTFILES" config core.hooksPath .githooks
 
-# mise-group (the tool that enables/disables the groups in mise/groups) is
+# mise-group (the tool that enables/disables the groups in config/mise/groups) is
 # a separate project (Q0tzly/mise-group) and is itself installed by mise:
-# it is one of the base tools in mise/config.toml. Before that install has
+# it is one of the base tools in config/mise/config.toml. Before that install has
 # run, group enabling borrows it through `mise exec`, which installs it on
 # demand. --no-mise-group disables that fallback.
 export PATH="$HOME/.local/bin:$PATH"

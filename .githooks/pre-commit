@@ -5,7 +5,7 @@
 # An intentional base edit is committed with: ALLOW_BASE=1 git commit ...
 [ "${ALLOW_BASE:-0}" = "1" ] && exit 0
 
-hits="$(git diff --cached --name-only | grep -E '^(shell/base\.sh|mise/config\.toml|zsh/zshrc|bash/bashrc)$' || true)"
+hits="$(git diff --cached --name-only | grep -E '^(shell/base\.sh|config/mise/config\.toml|shell/zshrc|shell/bashrc)$' || true)"
 if [ -n "$hits" ]; then
   echo "pre-commit: base file(s) staged:" >&2
   echo "$hits" >&2
