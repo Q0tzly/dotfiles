@@ -1,0 +1,14 @@
+# Secrets and machine-local state must never be committed: this repo is
+# public. The canonical secret store lives OUTSIDE the repo, in
+# ~/.config/secrets/ (see shell/secrets.sh). These patterns are only a
+# safety net in case a key is dropped into the working tree by mistake;
+# .githooks/pre-commit also rejects such files when staged.
+# (Templates stay committable: *.example is exempt in the hook, and git
+# still tracks already-tracked files regardless of these patterns.)
+/local/
+/secrets/
+*.local
+.env
+.env.*
+*.key
+*.pem

@@ -1,0 +1,9 @@
+# Global git ignore (linked to ~/.config/git/ignore, which git reads by
+# default in every repo): a safety net so a loose API key or env file is
+# not swept up by `git add -A` in any project. Ignoring is not blocking:
+# a file can still be force-added on purpose, so real keys belong in
+# ~/.config/secrets/, outside every repo.
+.env
+.env.*
+secrets/
+*.key

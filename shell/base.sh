@@ -42,3 +42,9 @@ if command -v gh >/dev/null 2>&1; then
   [ -n "$_dotfiles_token" ] && export MISE_GITHUB_TOKEN="$_dotfiles_token"
   unset _dotfiles_token
 fi
+
+# API keys: the loader is shell/secrets.sh; the values live outside this
+# repo, in ~/.config/secrets/ (never committed, see that file's header).
+_dotfiles_secrets="${DOTFILES:-$HOME/dev/github.com/q0tzly/dotfiles}/shell/secrets.sh"
+[ -f "$_dotfiles_secrets" ] && . "$_dotfiles_secrets"
+unset _dotfiles_secrets

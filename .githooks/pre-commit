@@ -3,6 +3,18 @@
 # (installers add PATH lines to the rc loaders, editors and scripts touch
 # the shared base), and those automatic edits must not slip into a commit.
 # An intentional base edit is committed with: ALLOW_BASE=1 git commit ...
+# Secrets never enter this (public) repo, with no bypass: loose API keys
+# belong in ~/.config/secrets/, outside the working tree. This catches a
+# key dropped into the tree and staged despite .gitignore (e.g. git add -f).
+# *.example templates are exempt.
+secret_hits="$(git diff --cached --name-only | grep -E '(^|/)(secrets|local)/|(^|/)\.env($|\.)|\.(key|pem)$' | grep -v '\.example$' || true)"
+if [ -n "$secret_hits" ]; then
+  echo "pre-commit: refusing to commit possible secret file(s):" >&2
+  echo "$secret_hits" >&2
+  echo "API keys live in ~/.config/secrets/ (outside this repo). Unstage and move the file there." >&2
+  exit 1
+fi
+
 [ "${ALLOW_BASE:-0}" = "1" ] && exit 0
 
 hits="$(git diff --cached --name-only | grep -E '^(shell/base\.sh|config/mise/config\.toml|shell/zshrc|shell/bashrc)$' || true)"

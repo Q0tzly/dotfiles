@@ -32,7 +32,9 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 | `shell/bashrc` | `~/.bashrc`（ローダーのみ。本体は同じ `shell/`） |
 | `shell/base.sh` | リンクしない。両ローダーが読む共通 base（PATH・mise・トークン。装飾なし） |
 | `shell/human.sh` | リンクしない。人間用プロファイルのときだけ両ローダーが読む（alias 等） |
+| `shell/secrets.sh` | リンクしない。base が読む API キーのローダー。本体（値）は repo 外の `~/.config/secrets/`（下記） |
 | `config/git/config` | `~/.config/git/config` |
+| `config/git/ignore` | `~/.config/git/ignore`。全 repo に効くグローバル ignore（`.env` や鍵ファイルの誤混入防止） |
 | `config/git/hooks/` | `~/.config/git/hooks`。`config/git/config` の `core.hooksPath` で全 repo に効く（帰属トレーラの強制） |
 | `config/ghostty/config.ghostty` | macOS: `~/Library/Application Support/com.mitchellh.ghostty/`、Linux: `~/.config/ghostty/` |
 | `config/helix/` | `~/.config/helix/` |
@@ -77,10 +79,21 @@ dotfiles update --auto         # タイマー用。安全に進められない�
 | ファイル | 用途 |
 | --- | --- |
 | `~/.config/git/work` | `grus-systems/` 配下で使う名前・メール（`config/git/config` の `includeIf` で読む） |
-| `~/.zshrc.local` / `~/.bashrc.local` | トークンなどの環境変数 |
+| `~/.zshrc.local` / `~/.bashrc.local` | マシン固有の設定（環境変数など。API キーは下記の集約先へ） |
 | `<dir>/mise.toml` | そのディレクトリだけで使うツール |
 
 `~/.gitconfig` は触らない。
+
+## API キー・秘密情報の集約
+
+値はこの repo（public）の中には絶対に置かない。集約先は repo の外の 1 ディレクトリで、全マシン共通の規約にする。
+
+- 置き場: `~/.config/secrets/`（ディレクトリ 700、`SECRETS_DIR` で変更可）。`install.sh` が空で作る
+- 形式: 1 キー = 1 ファイル（600、値は生の文字列だけ）。ファイル名はサービス名（`sakura`、`gemini` など）
+- 読み方: `shell/secrets.sh` を base が読み、`secret <名前>` で値が取れる。環境変数にしたいものは `~/.config/secrets/env.sh`（600）に `secret_export SAKURA_API_KEY sakura` のように書く（値のコピーは env.sh に持たない）
+- 追加: `umask 077; cat > ~/.config/secrets/<名前>` で貼って保存するだけ。新しいシェルから有効
+- 入れないもの: ツール自身が管理する認証情報（gh / claude / agy の OAuth、`~/.kaggle/access_token`、SSH 鍵など）は各ツールの置き場のままにする。ここはバラの API キー専用
+- 漏洩防止は三重: ①値が repo の外にある（`git add -A` でも入らない）②repo の `.gitignore` とグローバル ignore（`config/git/ignore`）で誤混入を無視 ③`.githooks/pre-commit` が秘密らしきファイルのコミットを（バイパスなしで）拒否
 
 ## コーディングエージェント
 

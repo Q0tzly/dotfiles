@@ -69,6 +69,9 @@ link shell/bashrc "$HOME/.bashrc"
 # XDG path on purpose: leaves ~/.gitconfig free for machine-specific settings.
 link config/git/config "$HOME/.config/git/config"
 link config/git/hooks "$HOME/.config/git/hooks"
+# Global ignore safety net (git reads ~/.config/git/ignore by default):
+# keeps loose keys/.env files out of `git add -A` in every repo.
+link config/git/ignore "$HOME/.config/git/ignore"
 case "$OS" in
   Darwin) link config/ghostty/config.ghostty "$HOME/Library/Application Support/com.mitchellh.ghostty/config.ghostty" ;;
   Linux) link config/ghostty/config.ghostty "$HOME/.config/ghostty/config.ghostty" ;;
@@ -145,7 +148,7 @@ if [[ $WITH_SUBCON -eq 1 ]]; then
   "$SUBCON/install.sh"
 fi
 
-# Untracked, machine-specific secrets go here; keep them private.
+# Untracked, machine-specific settings go here; keep them private.
 for local_rc in "$HOME/.zshrc.local" "$HOME/.bashrc.local"; do
   if [[ ! -e "$local_rc" ]]; then
     (umask 077; : > "$local_rc")
@@ -153,6 +156,29 @@ for local_rc in "$HOME/.zshrc.local" "$HOME/.bashrc.local"; do
   fi
   chmod 600 "$local_rc"
 done
+
+# API keys live in one store OUTSIDE this (public) repository, so they can
+# never be committed or pushed: one key per file, plus an env.sh that only
+# references those files (see shell/secrets.sh). Create it empty; filling
+# it is a manual, per-machine step.
+SECRETS_DIR="${SECRETS_DIR:-$HOME/.config/secrets}"
+if [[ ! -d "$SECRETS_DIR" ]]; then
+  mkdir -m 700 "$SECRETS_DIR"
+  log "Created $SECRETS_DIR"
+fi
+chmod 700 "$SECRETS_DIR"
+if [[ ! -e "$SECRETS_DIR/env.sh" ]]; then
+  (umask 077; cat > "$SECRETS_DIR/env.sh" <<'EOF'
+# Exports for the secret store in this directory (sourced by
+# shell/secrets.sh on every shell start). One key per file here
+# (mode 600, raw value only). Derive env vars from the files instead
+# of copying values into this file:
+#   secret_export SAKURA_API_KEY sakura
+EOF
+  )
+  log "Created $SECRETS_DIR/env.sh"
+fi
+chmod 600 "$SECRETS_DIR/env.sh"
 
 if [[ $ALL_GROUPS -eq 1 || -n "$GROUPS_TO_ENABLE" ]]; then
   if ! mise_group names >/dev/null 2>&1; then
