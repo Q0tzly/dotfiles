@@ -44,6 +44,24 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 | `config/mise/groups/` | `~/.config/mise/groups`（定義置き場）。有効化は別 repo の `mise-group` が `~/.config/mise/conf.d/` へリンク |
 | `system/launchd/` `system/systemd/` `system/mise-upgrade.sh` | 手動で有効化（下記） |
 
+## dotfiles コマンド
+
+install.sh が repo 直下の `dotfiles` を `~/.local/bin/dotfiles` にリンクする。この repo 自身の状態確認と更新用コマンド。
+
+```sh
+dotfiles status   # コミット、上流との差分、ローカル変更、ぶら下がりリンクの有無
+dotfiles check    # 最新なら exit 0、更新があれば exit 1（スクリプト用）
+dotfiles update   # pull（fast-forward のみ）→ 再リンク → mise upgrade
+dotfiles update --no-upgrade   # pull と再リンクだけ
+dotfiles update --auto         # タイマー用。安全に進められないときは静かに諦める
+```
+
+`update` の安全規則：
+
+- fast-forward 以外（diverge）は手出しせず報告だけ
+- ローカルで変更中のファイルが上流でも変わっていたら、止めてファイル名を出す（関係ない変更はそのまま残して進む）
+- 再リンクは `install.sh --link-only` 経由なので、置き換わるものは `.bak` に退避される
+
 ## シェルのプロファイル
 
 `zsh` / `bash` どちらのローダーも、共通 base（`shell/base.sh`）を読んでから、プロファイルで人間用レイヤーを足すかどうかを決める。
@@ -98,6 +116,8 @@ mise-group disable lang          # 無効化して、そのグループのツー
 ## 自動アップデート
 
 毎日 12:00 に `system/mise-upgrade.sh`（core と有効なグループを `mise upgrade`、prune はしない）が走る。ログは mac が `~/Library/Logs/mise-upgrade.log`、Linux は `journalctl --user -u mise-upgrade`。
+
+dotfiles の中身（repo 自身）も自動で追随させたい場合は、タイマーの実行先を `~/.local/bin/dotfiles update --auto` に変える。pull + 再リンク + mise upgrade まで一括でやるので、`system/mise-upgrade.sh` の代わりになる。安全に進められない状態（ローカル変更と競合、diverge、オフライン）では何も触らずに終わる。
 
 macOS (launchd):
 

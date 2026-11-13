@@ -1,0 +1,143 @@
+#!/bin/bash
+# dotfiles - keep this repository, its symlinks and the mise tools current.
+#
+#   dotfiles status           commit, upstream state, local changes, dangling links
+#   dotfiles check            exit 0 when up to date, 1 when an update is available
+#   dotfiles update           pull (fast-forward only), re-link, mise upgrade
+#   dotfiles update --no-upgrade   pull and re-link only
+#   dotfiles update --auto    for launchd/systemd: quiet, never interactive,
+#                             skips cleanly when a pull would be unsafe
+#
+# Safety rules for update:
+# - fast-forward only; a diverged clone is reported, never merged or reset
+# - if a locally modified file is also changed upstream, stop and list it
+# - re-linking goes through install.sh --link-only, which backs up anything
+#   it replaces, so an update cannot lose files
+set -uo pipefail
+
+# Resolve the clone this command belongs to, following the ~/.local/bin link.
+src="${BASH_SOURCE[0]}"
+while [[ -L "$src" ]]; do
+  dir="$(cd -P "$(dirname "$src")" && pwd)"
+  src="$(readlink "$src")"
+  [[ "$src" != /* ]] && src="$dir/$src"
+done
+ROOT="$(cd -P "$(dirname "$src")" && pwd)"
+if [[ ! -d "$ROOT/.git" ]]; then
+  ROOT="${DOTFILES:-$HOME/dev/github.com/q0tzly/dotfiles}"
+fi
+[[ -d "$ROOT/.git" ]] || { echo "dotfiles: no clone found (looked in $ROOT)" >&2; exit 1; }
+
+AUTO=0
+log() { printf '==> %s\n' "$*"; }
+note() { [[ $AUTO -eq 0 ]] && printf '%s\n' "$*" || printf 'dotfiles: %s\n' "$*"; }
+
+upstream() { git -C "$ROOT" rev-parse --abbrev-ref '@{u}' 2>/dev/null; }
+fetch_quiet() { git -C "$ROOT" fetch --quiet 2>/dev/null; }
+behind() { git -C "$ROOT" rev-list --count 'HEAD..@{u}' 2>/dev/null || echo 0; }
+ahead() { git -C "$ROOT" rev-list --count '@{u}..HEAD' 2>/dev/null || echo 0; }
+
+cmd_status() {
+  local head b a dirty dangling=0 p
+  head="$(git -C "$ROOT" log --oneline -1)"
+  log "$ROOT"
+  note "commit: $head"
+  if upstream >/dev/null; then
+    fetch_quiet || note "fetch failed (offline?) - upstream state may be stale"
+    b="$(behind)"; a="$(ahead)"
+    if [[ "$b" -eq 0 && "$a" -eq 0 ]]; then note "upstream: up to date"
+    elif [[ "$b" -gt 0 && "$a" -eq 0 ]]; then note "upstream: $b commit(s) behind - run: dotfiles update"
+    elif [[ "$b" -eq 0 ]]; then note "upstream: $a commit(s) ahead (unpushed)"
+    else note "upstream: diverged ($a ahead, $b behind) - resolve by hand"; fi
+  else
+    note "upstream: none configured"
+  fi
+  dirty="$(git -C "$ROOT" status --porcelain)"
+  if [[ -n "$dirty" ]]; then
+    note "local changes:"
+    printf '%s\n' "$dirty" | sed 's/^/  /'
+  else
+    note "local changes: none"
+  fi
+  for p in "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.config/git/config" \
+           "$HOME/.config/git/hooks" "$HOME/.config/mise/conf.d/base.toml" \
+           "$HOME/.config/mise/groups" "$HOME/.config/helix/config.toml" \
+           "$HOME/.config/starship.toml" "$HOME/.cargo/config.toml" \
+           "$HOME/.claude/CLAUDE.md" "$HOME/AGENTS.md"; do
+    if [[ -L "$p" && ! -e "$p" ]]; then
+      note "dangling link: $p -> $(readlink "$p")"
+      dangling=1
+    fi
+  done
+  [[ $dangling -eq 0 ]] && note "links: all resolve"
+  return 0
+}
+
+cmd_check() {
+  upstream >/dev/null || { echo "no upstream configured" >&2; exit 2; }
+  fetch_quiet || { echo "fetch failed" >&2; exit 2; }
+  local b; b="$(behind)"
+  if [[ "$b" -eq 0 ]]; then echo "up to date"; exit 0; fi
+  echo "$b commit(s) available"; exit 1
+}
+
+cmd_update() {
+  local do_upgrade=1 arg
+  for arg in "$@"; do
+    case "$arg" in
+      --no-upgrade) do_upgrade=0 ;;
+      --auto) AUTO=1 ;;
+      *) echo "unknown flag: $arg" >&2; exit 1 ;;
+    esac
+  done
+  if ! upstream >/dev/null; then
+    note "no upstream configured - skipping pull"
+  else
+    if ! git -C "$ROOT" fetch --quiet; then
+      note "fetch failed (offline?) - not updating"
+      [[ $AUTO -eq 1 ]] && exit 0 || exit 1
+    fi
+    local b a
+    b="$(behind)"; a="$(ahead)"
+    if [[ "$b" -gt 0 && "$a" -gt 0 ]]; then
+      note "diverged ($a ahead, $b behind) - resolve by hand, not touching it"
+      exit 1
+    fi
+    if [[ "$b" -gt 0 ]]; then
+      # Refuse when a locally modified file also changes upstream.
+      local dirty incoming clash
+      dirty="$(git -C "$ROOT" status --porcelain | sed -e 's/^...//' -e 's/.* -> //' | sort -u)"
+      incoming="$(git -C "$ROOT" diff --name-only 'HEAD..@{u}' | sort -u)"
+      clash="$(comm -12 <(printf '%s\n' "$dirty") <(printf '%s\n' "$incoming"))"
+      if [[ -n "$clash" ]]; then
+        note "local changes clash with the update - not pulling:"
+        printf '%s\n' "$clash" | sed 's/^/  /'
+        exit 1
+      fi
+      log "pulling $b commit(s)"
+      git -C "$ROOT" pull --ff-only --quiet || { note "pull failed"; exit 1; }
+      note "now at: $(git -C "$ROOT" log --oneline -1)"
+    else
+      note "already up to date ($(git -C "$ROOT" log --oneline -1))"
+    fi
+  fi
+  # Re-link with the (possibly just updated) install.sh. It pulls again,
+  # which is a no-op by now, and backs up whatever it replaces.
+  log "re-linking"
+  DOTFILES="$ROOT" "$ROOT/install.sh" --link-only >/dev/null
+  note "links refreshed"
+  if [[ $do_upgrade -eq 1 && -x "$ROOT/system/mise-upgrade.sh" ]]; then
+    log "mise upgrade"
+    "$ROOT/system/mise-upgrade.sh"
+  fi
+  note "done"
+}
+
+case "${1:-status}" in
+  status) cmd_status ;;
+  check) cmd_check ;;
+  update) shift; cmd_update "$@" ;;
+  -h|--help|help)
+    sed -n '2,20p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//' ;;
+  *) echo "usage: dotfiles [status|check|update [--no-upgrade] [--auto]]" >&2; exit 1 ;;
+esac

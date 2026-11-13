@@ -96,6 +96,8 @@ link ai/AGENTS.md "$HOME/.claude/CLAUDE.md"
 link ai/AGENTS.md "$HOME/.codex/AGENTS.md"
 # Muse reads ~/AGENTS.md as its operating manual, so the same file goes there too.
 link ai/AGENTS.md "$HOME/AGENTS.md"
+# The dotfiles command (update/status for this repo) lives on PATH.
+link dotfiles "$HOME/.local/bin/dotfiles"
 
 # Tracked hooks: the pre-commit hook guards base files against accidental
 # commits of edits that tools made through the symlinks.
