@@ -73,7 +73,7 @@ Claude Code・Codex・Muse のグローバル指示は `ai/AGENTS.md` の 1 フ�
 - `mise/config.toml`: core。常に入る最小構成。`conf.d/base.toml` にリンクされる。`mise use -g` の書き込み先 `~/.config/mise/config.toml` はマシンローカル（追跡しない）ので、ツールを足しても base は汚れない
 - base ファイル（`shell/base.sh`、`mise/config.toml`、rc ローダー）は `hooks/pre-commit` が誤コミットを止める。意図的な編集は `ALLOW_BASE=1 git commit ...` で通す
 - `mise/groups/<名前>.toml`: ジャンルごとの追加ツール。`mise-group` で入れたり消したりする
-- `mise-group` 本体は別リポジトリ [mise-group](https://github.com/Q0tzly/mise-group)（2026-11-13 に分離）。このリポジトリにはグループ定義だけを置き、install.sh が mise-group を clone して導入する（`--no-mise-group` で省略可）
+- `mise-group` 本体は別プロジェクト [mise-group](https://github.com/Q0tzly/mise-group)（2026-11-13 に分離、Go 製バイナリ）。このリポジトリにはグループ定義だけを置き、本体は base ツールとして mise 自身が入れる（`"github:Q0tzly/mise-group"`）。初回構築時だけ、install.sh が `mise exec` で先行して借りてくる（`--no-mise-group` でその借用を無効化）
 
 ```sh
 mise-group list                  # 一覧（[x] が有効）
