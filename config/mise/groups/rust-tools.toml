@@ -1,9 +1,14 @@
 [tools]
-# cargo: tools are built with cargo, so the group carries rust itself.
+# Prefer prebuilt binaries (github backend) where upstream ships them.
+# The remaining cargo: tools have no usable release binaries, so the
+# group still carries rust itself to build them:
+#   cargo-fuzz   binaries exist but x86_64-only for macOS (no arm64)
+#   cargo-sweep  upstream publishes no GitHub releases at all
+#   ripget       releases exist but ship no binary assets
 rust = "latest"
 cargo-binstall = "latest"
+"github:ghimiresdp/furl-cli" = "latest"
+"github:o2sh/onefetch" = "latest"
 "cargo:cargo-fuzz" = "latest"
 "cargo:cargo-sweep" = "latest"
-"cargo:furl-cli" = "latest"
-"cargo:onefetch" = "latest"
 "cargo:ripget" = "latest"
