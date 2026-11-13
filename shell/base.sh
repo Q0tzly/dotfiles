@@ -12,7 +12,8 @@ for _dotfiles_dir in \
   "$HOME/.antigravity-ide/antigravity-ide/bin" \
   "$HOME/.codeium/windsurf/bin" \
   "$HOME/.grok/bin" \
-  "$HOME/.lmstudio/bin"
+  "$HOME/.lmstudio/bin" \
+  "$HOME/.opencode/bin"
 do
   [ -d "$_dotfiles_dir" ] || continue
   case ":$PATH:" in
