@@ -2,5 +2,5 @@
 wrangler = { version = "latest", allow_builds = ["esbuild", "sharp", "workerd"] }
 "npm:cf" = "1.0.0-beta.12"
 cloudflared = "latest"
-hugo = "latest"
+"github:gohugoio/hugo" = "latest" # aqua backend failed on macOS (ENOENT installing 0.169.0); github verified
 rclone = "latest"
