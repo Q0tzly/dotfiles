@@ -2,5 +2,10 @@
 wrangler = { version = "latest", allow_builds = ["esbuild", "sharp", "workerd"] }
 "npm:cf" = "1.0.0-beta.12"
 cloudflared = "latest"
-"github:gohugoio/hugo" = "latest" # aqua backend failed on macOS (ENOENT installing 0.169.0); github verified
+# Pinned: since 0.153.0 hugo ships macOS only as a .pkg installer, which
+# neither mise backend can install (aqua's registry handles pkg but mise's
+# aqua backend does not; the github backend has no darwin asset to match).
+# 0.152.2 is the last release with a darwin-universal tarball. On macOS,
+# install a newer hugo from the official .pkg outside mise if ever needed.
+"github:gohugoio/hugo" = "0.152.2"
 rclone = "latest"
