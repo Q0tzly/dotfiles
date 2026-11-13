@@ -8,6 +8,7 @@ DOTFILES="${DOTFILES:-$HOME/dev/github.com/q0tzly/dotfiles}"
 . "$DOTFILES/shell/base.sh"
 
 if [ "${DOTFILES_PROFILE:-human}" = "human" ]; then
+  [ -r "$DOTFILES/shell/completions/dotfiles.bash" ] && . "$DOTFILES/shell/completions/dotfiles.bash"
   command -v starship >/dev/null && eval "$(starship init bash)"
   command -v zoxide >/dev/null && eval "$(zoxide init bash)"
   . "$DOTFILES/shell/human.sh"

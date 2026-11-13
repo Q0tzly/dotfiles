@@ -10,7 +10,7 @@ DOTFILES="${DOTFILES:-$HOME/dev/github.com/q0tzly/dotfiles}"
 . "$DOTFILES/shell/base.sh"
 
 if [[ "${DOTFILES_PROFILE:-human}" == "human" ]]; then
-  fpath=($HOME/.grok/completions/zsh(N-/) $fpath)
+  fpath=($DOTFILES/shell/completions $HOME/.grok/completions/zsh(N-/) $fpath)
   autoload -Uz compinit && compinit
   command -v starship >/dev/null && eval "$(starship init zsh)"
   command -v zoxide >/dev/null && eval "$(zoxide init zsh)"

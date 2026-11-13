@@ -1,0 +1,21 @@
+#compdef dotfiles
+
+_dotfiles() {
+  local -a commands=(
+    'status:show commit, upstream state, local changes and dangling links'
+    'check:exit 0 when up to date, 1 when an update is available'
+    'update:pull (fast-forward only), re-link, and mise upgrade'
+    'help:show usage'
+  )
+  if (( CURRENT == 2 )); then
+    _describe -t commands 'dotfiles command' commands
+  elif (( CURRENT >= 3 )) && [[ "${words[2]}" == update ]]; then
+    local -a flags=(
+      '--no-upgrade:pull and re-link only'
+      '--auto:non-interactive mode for timers; skip cleanly when unsafe'
+    )
+    _describe -t flags 'update flag' flags
+  fi
+}
+
+_dotfiles "$@"
