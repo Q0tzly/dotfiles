@@ -38,8 +38,7 @@ curl -fsSL https://raw.githubusercontent.com/Q0tzly/dotfiles/main/install.sh | b
 | `ai/AGENTS.md` | `~/.claude/CLAUDE.md`、`~/.codex/AGENTS.md`、`~/AGENTS.md`（Muse） |
 | `mise/config.toml` | `~/.config/mise/conf.d/base.toml`（base。`~/.config/mise/config.toml` はマシンローカルで追跡しない） |
 | `hooks/` | リンクしない。`core.hooksPath` で有効化。base ファイルの誤コミット防止 |
-| `mise/groups/` | `mise-group enable` で `~/.config/mise/conf.d/` にリンク |
-| `scripts/mise-group` | `~/.local/bin/mise-group` |
+| `mise/groups/` | `~/.config/mise/groups`（定義置き場）。有効化は別 repo の `mise-group` が `~/.config/mise/conf.d/` へリンク |
 | `launchd/` `systemd/` | 手動で有効化（下記） |
 
 ## シェルのプロファイル
@@ -74,6 +73,7 @@ Claude Code・Codex・Muse のグローバル指示は `ai/AGENTS.md` の 1 フ�
 - `mise/config.toml`: core。常に入る最小構成。`conf.d/base.toml` にリンクされる。`mise use -g` の書き込み先 `~/.config/mise/config.toml` はマシンローカル（追跡しない）ので、ツールを足しても base は汚れない
 - base ファイル（`shell/base.sh`、`mise/config.toml`、rc ローダー）は `hooks/pre-commit` が誤コミットを止める。意図的な編集は `ALLOW_BASE=1 git commit ...` で通す
 - `mise/groups/<名前>.toml`: ジャンルごとの追加ツール。`mise-group` で入れたり消したりする
+- `mise-group` 本体は別リポジトリ [mise-group](https://github.com/Q0tzly/mise-group)（2026-11-13 に分離）。このリポジトリにはグループ定義だけを置き、install.sh が mise-group を clone して導入する（`--no-mise-group` で省略可）
 
 ```sh
 mise-group list                  # 一覧（[x] が有効）

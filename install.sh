@@ -5,6 +5,8 @@
 # Flags: --groups a,b (enable mise tool groups, see mise/groups/), --all (every group),
 #        --link-only (skip mise install)
 #        --subcon (also clone and install subcon, which links itself and its Muse skill)
+#        --no-mise-group (do not clone/install the separate mise-group repo;
+#                         group enabling then needs a mise-group already on PATH)
 set -euo pipefail
 
 REPO_URL="https://github.com/Q0tzly/dotfiles.git"
@@ -12,7 +14,10 @@ DOTFILES="${DOTFILES:-$HOME/dev/github.com/q0tzly/dotfiles}"
 OS="${DOTFILES_OS:-$(uname -s)}"
 SUBCON_REPO_URL="https://github.com/Q0tzly/subcon.git"
 SUBCON="${SUBCON:-$HOME/dev/github.com/q0tzly/subcon}"
+MISE_GROUP_REPO_URL="https://github.com/Q0tzly/mise-group.git"
+MISE_GROUP="${MISE_GROUP:-$HOME/dev/github.com/q0tzly/mise-group}"
 WITH_SUBCON=0
+WITH_MISE_GROUP=1
 GROUPS_TO_ENABLE=""
 ALL_GROUPS=0
 LINK_ONLY=0
@@ -22,6 +27,7 @@ while [[ $# -gt 0 ]]; do
     --all) ALL_GROUPS=1 ;;
     --link-only) LINK_ONLY=1 ;;
     --subcon) WITH_SUBCON=1 ;;
+    --no-mise-group) WITH_MISE_GROUP=0 ;;
     *) echo "unknown flag: $1" >&2; exit 1 ;;
   esac
   shift
@@ -81,7 +87,9 @@ if [[ -L "$HOME/.config/mise/config.toml" && "$(readlink "$HOME/.config/mise/con
   log "Removed legacy ~/.config/mise/config.toml link (base moved to conf.d/base.toml)"
 fi
 link mise/config.toml "$HOME/.config/mise/conf.d/base.toml"
-link scripts/mise-group "$HOME/.local/bin/mise-group"
+# Group definitions live here; the mise-group tool itself is a separate repo
+# (installed below), and its default groups directory is ~/.config/mise/groups.
+link mise/groups "$HOME/.config/mise/groups"
 link cargo/config.toml "$HOME/.cargo/config.toml"
 # One global instruction file for every coding agent. Codex does not expand
 # @imports, so the file must be self-contained.
@@ -93,6 +101,23 @@ link ai/AGENTS.md "$HOME/AGENTS.md"
 # Tracked hooks: the pre-commit hook guards base files against accidental
 # commits of edits that tools made through the symlinks.
 git -C "$DOTFILES" config core.hooksPath hooks
+
+# mise-group (the tool that enables/disables mise/groups) lives in its own
+# repo since 2026-11-13; this repo keeps only the group definitions.
+MG=""
+if [[ $WITH_MISE_GROUP -eq 1 ]]; then
+  if [[ -d "$MISE_GROUP/.git" ]]; then
+    log "Updating $MISE_GROUP"
+    git -C "$MISE_GROUP" pull --ff-only || log "pull skipped (no upstream or local changes)"
+  else
+    log "Cloning mise-group into $MISE_GROUP"
+    git clone "$MISE_GROUP_REPO_URL" "$MISE_GROUP"
+  fi
+  "$MISE_GROUP/install.sh"
+  MG="$MISE_GROUP/bin/mise-group"
+elif command -v mise-group >/dev/null; then
+  MG="$(command -v mise-group)"
+fi
 
 if [[ $WITH_SUBCON -eq 1 ]]; then
   if [[ -d "$SUBCON/.git" ]]; then
@@ -114,10 +139,14 @@ for local_rc in "$HOME/.zshrc.local" "$HOME/.bashrc.local"; do
   chmod 600 "$local_rc"
 done
 
-if [[ $ALL_GROUPS -eq 1 ]]; then
-  "$DOTFILES/scripts/mise-group" enable --no-install $("$DOTFILES/scripts/mise-group" names)
-elif [[ -n "$GROUPS_TO_ENABLE" ]]; then
-  "$DOTFILES/scripts/mise-group" enable --no-install ${GROUPS_TO_ENABLE//,/ }
+if [[ $ALL_GROUPS -eq 1 || -n "$GROUPS_TO_ENABLE" ]]; then
+  if [[ -z "$MG" ]]; then
+    log "mise-group not available: skipping group enabling (install the mise-group repo or drop --no-mise-group)"
+  elif [[ $ALL_GROUPS -eq 1 ]]; then
+    "$MG" enable --no-install $("$MG" names)
+  else
+    "$MG" enable --no-install ${GROUPS_TO_ENABLE//,/ }
+  fi
 fi
 
 if [[ $LINK_ONLY -eq 1 ]]; then
