@@ -115,9 +115,9 @@ mise-group disable lang          # 無効化して、そのグループのツー
 
 ## 自動アップデート
 
-毎日 12:00 に `system/mise-upgrade.sh`（core と有効なグループを `mise upgrade`、prune はしない）が走る。ログは mac が `~/Library/Logs/mise-upgrade.log`、Linux は `journalctl --user -u mise-upgrade`。
+毎日 12:00 に `dotfiles update --auto`（pull + 再リンク + `mise upgrade`、prune はしない）が走る。テンプレート（`system/launchd/` と `system/systemd/`、ユニット名は互換のため mise-upgrade のまま）は最初からこちらを指している。安全に進められない状態（ローカル変更と競合、diverge、オフライン）では何も触らずに終わる。ログは mac が `~/Library/Logs/dotfiles-update.log`、Linux は `journalctl --user -u mise-upgrade`。
 
-dotfiles の中身（repo 自身）も自動で追随させたい場合は、タイマーの実行先を `~/.local/bin/dotfiles update --auto` に変える。pull + 再リンク + mise upgrade まで一括でやるので、`system/mise-upgrade.sh` の代わりになる。安全に進められない状態（ローカル変更と競合、diverge、オフライン）では何も触らずに終わる。
+ツールだけ上げたいときは `system/mise-upgrade.sh` を直接叩く（従来どおり単体でも動く）。
 
 macOS (launchd):
 

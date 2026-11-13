@@ -6,7 +6,9 @@
   <string>dev.q0tzly.mise-upgrade</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/Users/q0tzly/dev/github.com/q0tzly/dotfiles/system/mise-upgrade.sh</string>
+    <string>/Users/q0tzly/.local/bin/dotfiles</string>
+    <string>update</string>
+    <string>--auto</string>
   </array>
   <!-- Runs daily at 12:00; if the Mac was asleep, launchd runs it on wake. -->
   <key>StartCalendarInterval</key>
@@ -15,8 +17,8 @@
     <key>Minute</key><integer>0</integer>
   </dict>
   <key>StandardOutPath</key>
-  <string>/Users/q0tzly/Library/Logs/mise-upgrade.log</string>
+  <string>/Users/q0tzly/Library/Logs/dotfiles-update.log</string>
   <key>StandardErrorPath</key>
-  <string>/Users/q0tzly/Library/Logs/mise-upgrade.log</string>
+  <string>/Users/q0tzly/Library/Logs/dotfiles-update.log</string>
 </dict>
 </plist>

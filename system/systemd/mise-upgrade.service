@@ -1,6 +1,6 @@
 [Unit]
-Description=Upgrade mise-managed tools
+Description=Update dotfiles and mise-managed tools
 
 [Service]
 Type=oneshot
-ExecStart=%h/dev/github.com/q0tzly/dotfiles/system/mise-upgrade.sh
+ExecStart=%h/.local/bin/dotfiles update --auto

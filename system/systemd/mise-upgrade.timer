@@ -1,5 +1,5 @@
 [Unit]
-Description=Daily mise upgrade
+Description=Daily dotfiles update
 
 [Timer]
 OnCalendar=*-*-* 12:00:00
